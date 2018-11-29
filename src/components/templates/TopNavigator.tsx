@@ -12,7 +12,7 @@ const Container = styled.nav`
 const TopNavigator = () => {
   return (
     <Container>
-      <h1>Achenputtel</h1>
+      <h1>Tsumiki</h1>
     </Container>
   );
 };
