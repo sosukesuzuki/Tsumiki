@@ -10,15 +10,15 @@ export interface Label {
 
 export interface Todo {
   name: string;
-  detail: string;
+  detail?: string;
   comments: TodoComment[];
-  limit: string;
-  label: Label;
+  limit?: string;
+  label?: Label;
   id: string;
   updatedAt: string;
 }
 
-export interface Ccolumn {
+export interface Column {
   name: string;
   todos: Todo[];
   id: string;

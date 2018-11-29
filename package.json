@@ -26,7 +26,8 @@
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0",
     "redux": "^4.0.1",
-    "styled-components": "^4.1.1"
+    "styled-components": "^4.1.1",
+    "typescript-fsa": "^3.0.0-beta-2"
   },
   "sw-precache": {
     "maximumFileSizeToCacheInBytes": 10485760
