@@ -1,26 +1,28 @@
 export interface TodoComment {
   content: string;
   updatedAt: string;
+  todoId: string;
+  id: string;
 }
 
 export interface Label {
   color: string;
   name: string;
+  id: string;
 }
 
 export interface Todo {
   name: string;
   detail?: string;
-  comments: TodoComment[];
   limit?: string;
   label?: Label;
   id: string;
   updatedAt: string;
+  columnId: string;
 }
 
 export interface Column {
   name: string;
-  todos: Todo[];
   id: string;
   updatedAt: string;
 }
