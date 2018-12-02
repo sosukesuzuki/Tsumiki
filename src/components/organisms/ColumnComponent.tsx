@@ -135,17 +135,13 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   );
 
   const onClickAddTodoButton = useCallback(function(columnId: string) {
-    (async () => {
-      await addTodo({ columnId });
-    })();
+    addTodo({ columnId });
   }, []);
 
   const onClickClumnDeleteButton = useCallback(function(columnId: string) {
-    (async () => {
-      await deleteColumn({
-        columnId
-      });
-    })();
+    deleteColumn({
+      columnId
+    });
   }, []);
 
   const { isTypingColumnName, contentInColumnNameInput } = state;

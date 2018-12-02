@@ -152,17 +152,15 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 
   const onClickDetailSaveButton = useCallback(
     function() {
-      (async () => {
-        await updateTodo({
-          ...todo,
-          updatedAt: Date.now().toString(),
-          detail: contentInDetailInput
-        });
-        setState((state: State) => ({
-          ...state,
-          isTypingDetailInput: false
-        }));
-      })();
+      updateTodo({
+        ...todo,
+        updatedAt: Date.now().toString(),
+        detail: contentInDetailInput
+      });
+      setState((state: State) => ({
+        ...state,
+        isTypingDetailInput: false
+      }));
     },
     [contentInDetailInput]
   );
@@ -195,27 +193,23 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 
   const onKeyPressCommentTextarea = useCallback(
     function(ev: KeyboardEvent<HTMLTextAreaElement>) {
-      (async () => {
-        if (ev.key === "Enter") {
-          await addComment({
-            todoId: todo.id,
-            content: contentInCommentTextare
-          });
-          setState((state: State) => ({
-            ...state,
-            contentInCommentTextare: "",
-            isTypingCommentTextarea: false
-          }));
-        }
-      })();
+      if (ev.key === "Enter") {
+        addComment({
+          todoId: todo.id,
+          content: contentInCommentTextare
+        });
+        setState((state: State) => ({
+          ...state,
+          contentInCommentTextare: "",
+          isTypingCommentTextarea: false
+        }));
+      }
     },
     [contentInCommentTextare]
   );
 
   const onClickDeleteTodoButton = useCallback(function(todoId: string) {
-    (async () => {
-      await deleteTodo({ todoId });
-    })();
+    deleteTodo({ todoId });
   }, []);
 
   return (

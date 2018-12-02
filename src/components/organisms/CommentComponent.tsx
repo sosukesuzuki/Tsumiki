@@ -21,9 +21,7 @@ const CommentComponentProps: React.SFC<CommentComponentProps> = ({
   ...comment
 }) => {
   const onClickDeleteCommentButton = useCallback(function() {
-    (async () => {
-      await deleteComment({ commentId: comment.id });
-    })();
+    deleteComment({ commentId: comment.id });
   }, []);
   return (
     <Container>
