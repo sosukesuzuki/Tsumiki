@@ -17,17 +17,21 @@ type OnlyIdRequiredColumn = Partial<Omit<Column, "id">> & { id: string };
 
 const Container = styled.div`
   width: 200px;
+  height: fit-content;
   background-color: ${colors.light};
   color: ${colors.heavy};
   margin: 0 15px;
+  padding: 10px;
   display: flex;
   overflow-x: auto;
-  overflow-y: hidden;
   input {
     height: 25px;
+    margin: 0;
   }
   h3 {
     cursor: pointer;
+    height: 25px;
+    margin: 0;
   }
 `;
 
