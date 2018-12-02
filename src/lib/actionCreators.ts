@@ -1,7 +1,6 @@
 import actionCreatorFactory from "typescript-fsa";
 import { Column, Todo, TodoComment } from "./type";
-
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+import { Omit } from "lodash";
 
 const actionCreator = actionCreatorFactory();
 
