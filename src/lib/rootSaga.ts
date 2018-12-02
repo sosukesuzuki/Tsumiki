@@ -119,6 +119,15 @@ function* addCommentSaga(): SagaIterator {
   }
 }
 
+function* deleteCommentSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.DeleteComment);
+    const { commentId } = payload;
+    yield call(DB.deleteComment, commentId);
+    yield put(fetchBoardData);
+  }
+}
+
 export default function*(): SagaIterator {
   yield fork(fetchBoardDataSaga);
   yield fork(addColumnSaga);
@@ -128,4 +137,5 @@ export default function*(): SagaIterator {
   yield fork(addCommentSaga);
   yield fork(deleteColumnSaga);
   yield fork(deleteTodoSaga);
+  yield fork(deleteCommentSaga);
 }
