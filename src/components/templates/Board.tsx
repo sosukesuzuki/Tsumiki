@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import colors from "../../lib/colors";
 
@@ -10,4 +11,6 @@ const Board = () => {
   return <Container />;
 };
 
-export default Board;
+export default connect(state => {
+  return state;
+})(Board);
