@@ -1,6 +1,8 @@
 import actionCreatorFactory from "typescript-fsa";
 import { Column, Todo, TodoComment } from "./type";
 
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
 const actionCreator = actionCreatorFactory();
 
 export enum ActionTypes {
@@ -8,6 +10,7 @@ export enum ActionTypes {
   SetBoardData = "SET_BOARD_DATA",
   AddColumn = "ADD_COLUMN",
   DeleteColumn = "DELETE_COLUMN",
+  UpdateColumn = "UPDATE_COLUMN",
   SetColumn = "SET_COLUMN",
   AddTodo = "ADD_TODO",
   DeleteTodo = "DELETE_TODO",
@@ -33,6 +36,13 @@ export const addColumn = actionCreator.async<null, null>(ActionTypes.AddColumn);
 export const deleteColumn = actionCreator.async<{ column: Column }, null>(
   ActionTypes.DeleteColumn
 );
+
+export const updateColumn = actionCreator.async<
+  {
+    column: Partial<Omit<Column, "id">> & { id: string };
+  },
+  null
+>(ActionTypes.UpdateColumn);
 
 export const setColumn = actionCreator<{ column: Column }>(
   ActionTypes.SetColumn

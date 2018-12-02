@@ -45,6 +45,10 @@ export async function deleteColumn(id: string) {
   return await db.columns.delete(id);
 }
 
+export async function updateColumn(column: Column) {
+  return await db.columns.put(column);
+}
+
 export async function addTodo(todo: Todo): Promise<string> {
   return await db.todos.add(todo);
 }

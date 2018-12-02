@@ -25,6 +25,15 @@ function* addColumnSaga(): SagaIterator {
   }
 }
 
+function* updateColumnSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.UpdateColumn);
+    const { column } = payload;
+    yield call(DB.updateColumn, column);
+    yield put(setColumn({ column }));
+  }
+}
+
 function* addTodoSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.AddTodo);
@@ -46,6 +55,7 @@ function* addCommentSaga(): SagaIterator {
 export default function*(): SagaIterator {
   yield fork(fetchBoardDataSaga);
   yield fork(addColumnSaga);
+  yield fork(updateColumnSaga);
   yield fork(addTodoSaga);
   yield fork(addCommentSaga);
 }
