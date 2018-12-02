@@ -73,7 +73,6 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
       contentInDetailInput,
       isTypingNameInput,
       contentInNameInput,
-      isTypingCommentTextarea,
       contentInCommentTextare
     },
     setState
@@ -253,7 +252,6 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
           onChange={onChangeCommentTextarea}
           onKeyPress={onKeyPressCommentTextarea}
         />
-        <button disabled={!isTypingCommentTextarea}>保存</button>
       </section>
       <section>
         <h3>コメントログ</h3>
