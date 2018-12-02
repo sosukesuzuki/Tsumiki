@@ -37,10 +37,22 @@ export async function addColumn(column: Column): Promise<string> {
   return await db.columns.add(column);
 }
 
+export async function deleteColumn(id: string) {
+  return await db.columns.delete(id);
+}
+
 export async function addTodo(todo: Todo): Promise<string> {
   return await db.todos.add(todo);
 }
 
-export async function addComments(comment: TodoComment): Promise<string> {
+export async function deleteTodo(id: string) {
+  return await db.todos.delete(id);
+}
+
+export async function addComment(comment: TodoComment): Promise<string> {
   return await db.comments.add(comment);
+}
+
+export async function deleteComment(id: string) {
+  return await db.comments.delete(id);
 }
