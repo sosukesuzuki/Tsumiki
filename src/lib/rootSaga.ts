@@ -49,6 +49,15 @@ function* addTodoSaga(): SagaIterator {
   }
 }
 
+function* updateTodoSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.UpdateTodo);
+    const { todo } = payload;
+    yield call(DB.updateTodo, todo);
+    yield put(setTodo({ todo }));
+  }
+}
+
 function* addCommentSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.AddComment);
@@ -63,5 +72,6 @@ export default function*(): SagaIterator {
   yield fork(addColumnSaga);
   yield fork(updateColumnSaga);
   yield fork(addTodoSaga);
+  yield fork(updateTodoSaga);
   yield fork(addCommentSaga);
 }

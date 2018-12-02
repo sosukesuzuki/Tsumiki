@@ -1,3 +1,5 @@
+import { Omit } from "lodash";
+
 export interface TodoComment {
   content: string;
   updatedAt: string;
@@ -26,3 +28,11 @@ export interface Column {
   id: string;
   updatedAt: string;
 }
+
+type OnlyIdRequired<Item extends { id: string }> = Partial<Omit<Item, "id">> & {
+  id: string;
+};
+
+export type OnlyIdRequiredColumn = OnlyIdRequired<Column>;
+export type OnlyIdRequiredTodo = OnlyIdRequired<Todo>;
+export type OnlyIdRequiredComment = OnlyIdRequired<TodoComment>;

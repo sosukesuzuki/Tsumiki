@@ -57,6 +57,10 @@ export async function deleteTodo(id: string) {
   return await db.todos.delete(id);
 }
 
+export async function updateTodo(todo: Todo) {
+  return await db.todos.put(todo);
+}
+
 export async function addComment(comment: TodoComment): Promise<string> {
   return await db.comments.add(comment);
 }

@@ -8,14 +8,11 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Column, Todo } from "../../lib/type";
+import { Column, Todo, OnlyIdRequiredColumn } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
-import { Omit } from "lodash";
 import TodoComponent from "./TodoComponent";
-
-type OnlyIdRequiredColumn = Partial<Omit<Column, "id">> & { id: string };
 
 const Container = styled.div`
   width: 200px;

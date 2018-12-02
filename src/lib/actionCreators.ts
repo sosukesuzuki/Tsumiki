@@ -1,6 +1,11 @@
 import actionCreatorFactory from "typescript-fsa";
-import { Column, Todo, TodoComment } from "./type";
-import { Omit } from "lodash";
+import {
+  Column,
+  Todo,
+  TodoComment,
+  OnlyIdRequiredColumn,
+  OnlyIdRequiredTodo
+} from "./type";
 
 const actionCreator = actionCreatorFactory();
 
@@ -13,6 +18,7 @@ export enum ActionTypes {
   SetColumn = "SET_COLUMN",
   AddTodo = "ADD_TODO",
   DeleteTodo = "DELETE_TODO",
+  UpdateTodo = "UPDATE_TODO",
   SetTodo = "SET_TODO",
   AddComment = "ADD_COMMENT",
   DeleteComment = "DELETE_COMMENT",
@@ -37,9 +43,7 @@ export const deleteColumn = actionCreator.async<{ column: Column }, null>(
 );
 
 export const updateColumn = actionCreator.async<
-  {
-    column: Partial<Omit<Column, "id">> & { id: string };
-  },
+  { column: OnlyIdRequiredColumn },
   null
 >(ActionTypes.UpdateColumn);
 
@@ -54,6 +58,11 @@ export const addTodo = actionCreator.async<{ columnId: string }, null>(
 export const deleteTodo = actionCreator.async<{ todo: Todo }, null>(
   ActionTypes.DeleteTodo
 );
+
+export const updateTodo = actionCreator.async<
+  { todo: OnlyIdRequiredTodo },
+  null
+>(ActionTypes.UpdateTodo);
 
 export const setTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetTodo);
 
