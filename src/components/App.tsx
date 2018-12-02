@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
-import { Provider } from "react-redux";
-import store from "../lib/store";
 import TopNavigation from "./templates/TopNavigator";
 import Board from "./templates/Board";
+import { ActionTypes } from "../lib/actionCreators";
 
 const Container = styled.div`
   display: grid;
@@ -13,15 +13,31 @@ const Container = styled.div`
   overflow-y: hidden;
 `;
 
-const App = () => {
+interface AppProps {
+  fetchBoardData: () => { type: ActionTypes };
+}
+
+const App: React.SFC<AppProps> = ({ fetchBoardData }) => {
+  useEffect(() => {
+    (async function() {
+      await fetchBoardData();
+    })();
+  }, []);
+
   return (
-    <Provider store={store}>
-      <Container>
-        <TopNavigation />
-        <Board />
-      </Container>
-    </Provider>
+    <Container>
+      <TopNavigation />
+      <Board />
+    </Container>
   );
 };
 
-export default App;
+export default connect(
+  null,
+  dispach => ({
+    fetchBoardData: () =>
+      dispach({
+        type: ActionTypes.FetchBoardData
+      })
+  })
+)(App);
