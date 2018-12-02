@@ -1,6 +1,11 @@
 import { SagaIterator } from "redux-saga";
 import { fork, call, put, take } from "redux-saga/effects";
-import { setBoardData, setColumn, ActionTypes } from "./actionCreators";
+import {
+  setBoardData,
+  setColumn,
+  ActionTypes,
+  setTodo
+} from "./actionCreators";
 import * as DB from "./db";
 import {
   generateColumn,
@@ -40,6 +45,7 @@ function* addTodoSaga(): SagaIterator {
     const { columnId } = payload;
     const todo = generateTodo({ name: "", columnId });
     yield call(DB.addTodo, todo);
+    yield put(setTodo({ todo }));
   }
 }
 

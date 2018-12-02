@@ -8,10 +8,12 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Column } from "../../lib/type";
+import { Column, Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
+import { State as RootState } from "../../lib/reducer";
 import { Omit } from "lodash";
+import TodoComponent from "./TodoComponent";
 
 type OnlyIdRequiredColumn = Partial<Omit<Column, "id">> & { id: string };
 
@@ -22,7 +24,6 @@ const Container = styled.div`
   color: ${colors.heavy};
   margin: 0 15px;
   padding: 10px;
-  display: flex;
   overflow-x: auto;
   input {
     height: 25px;
@@ -36,8 +37,14 @@ const Container = styled.div`
 `;
 
 type ColumnComponentProps = Column & {
+  todos: Todo[];
   updateColumn: (
     column: OnlyIdRequiredColumn
+  ) => {
+    type: ActionTypes;
+  };
+  addTodo: (
+    { columnId }: { columnId: string }
   ) => {
     type: ActionTypes;
   };
@@ -56,7 +63,9 @@ const initialState: State = {
 const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   name,
   id,
-  updateColumn
+  updateColumn,
+  addTodo,
+  todos
 }) => {
   const [state, setState] = useState(initialState);
 
@@ -122,29 +131,51 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     [state.contentInColumnNameInput, state.isTypingColumnName]
   );
 
+  const onClickAddTodoButton = useCallback(function(columnId: string) {
+    (async () => {
+      await addTodo({ columnId });
+    })();
+  }, []);
+
   const { isTypingColumnName, contentInColumnNameInput } = state;
   return (
     <Container>
-      {!isTypingColumnName ? (
-        <h3 onClick={onClickColumnName}>{name || "名前はありません。"}</h3>
-      ) : (
-        <input
-          type="text"
-          value={contentInColumnNameInput}
-          onKeyPress={onKeyPressColumnNameInput}
-          onChange={onChangeColumnNameInput}
-          onBlur={onBlurColumnNameInput}
-          ref={columnInputEl}
-        />
-      )}
+      <div>
+        {!isTypingColumnName ? (
+          <h3 onClick={onClickColumnName}>{name || "名前はありません。"}</h3>
+        ) : (
+          <input
+            type="text"
+            value={contentInColumnNameInput}
+            onKeyPress={onKeyPressColumnNameInput}
+            onChange={onChangeColumnNameInput}
+            onBlur={onBlurColumnNameInput}
+            ref={columnInputEl}
+          />
+        )}
+      </div>
+      <div>
+        {todos
+          .filter(todo => todo.columnId === id)
+          .map(todo => (
+            <TodoComponent {...todo} key={todo.id} />
+          ))}
+      </div>
+      <button onClick={() => onClickAddTodoButton(id)}>
+        + さらにカードを追加
+      </button>
     </Container>
   );
 };
 
 export default connect(
-  null,
+  (state: RootState) => ({
+    todos: state.todos
+  }),
   dispatch => ({
     updateColumn: (column: OnlyIdRequiredColumn) =>
-      dispatch({ type: ActionTypes.UpdateColumn, payload: { column } })
+      dispatch({ type: ActionTypes.UpdateColumn, payload: { column } }),
+    addTodo: ({ columnId }: { columnId: string }) =>
+      dispatch({ type: ActionTypes.AddTodo, payload: { columnId } })
   })
 )(ColumnComponent);
