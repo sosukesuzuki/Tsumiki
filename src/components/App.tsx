@@ -19,9 +19,7 @@ interface AppProps {
 
 const App: React.SFC<AppProps> = ({ fetchBoardData }) => {
   useEffect(() => {
-    (async function() {
-      await fetchBoardData();
-    })();
+    fetchBoardData();
   }, []);
 
   return (
