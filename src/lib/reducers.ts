@@ -1,23 +1,37 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers";
-import { Column, Todo } from "./type";
+import { Column, Todo, TodoComment } from "./type";
 import { setBoardData, setColumn, setTodo, setComment } from "./actionCreators";
-import _ from "lodash";
 
 interface State {
   columns: Column[];
+  todos: Todo[];
+  comments: TodoComment[];
 }
 
 const initialState: State = {
-  columns: []
+  columns: [],
+  todos: [],
+  comments: []
 };
 
 const reducer = reducerWithInitialState(initialState)
-  .case(setBoardData, (state: State, { columns }) => ({ ...state, columns }))
+  .case(setBoardData, (state: State, { columns, todos, comments }) => ({
+    ...state,
+    columns,
+    todos,
+    comments
+  }))
   .case(setColumn, (state: State, { column }) => ({
     ...state,
     columns: [...state.columns, column]
   }))
-  .case(setTodo, (state: State, { todo }) => {})
-  .case(setComment, (state: State, { comment }) => {});
+  .case(setTodo, (state: State, { todo }) => ({
+    ...state,
+    todos: [...state.todos, todo]
+  }))
+  .case(setComment, (state: State, { comment }) => ({
+    ...state,
+    comments: [...state.comments, comment]
+  }));
 
 export default reducer;
