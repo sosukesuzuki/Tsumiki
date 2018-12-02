@@ -14,6 +14,7 @@
     "@types/lodash": "^4.14.118",
     "@types/react": "^16.7.7",
     "@types/react-dom": "^16.0.11",
+    "@types/redux-saga": "^0.10.5",
     "@types/styled-components": "^4.1.1",
     "parcel-bundler": "^1.10.3",
     "parcel-plugin-sw-precache": "^1.0.3",
@@ -30,9 +31,11 @@
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0",
     "redux": "^4.0.1",
+    "redux-saga": "^0.16.2",
     "styled-components": "^4.1.1",
     "typescript-fsa": "^3.0.0-beta-2",
-    "typescript-fsa-reducers": "^1.1.0"
+    "typescript-fsa-reducers": "^1.1.0",
+    "typescript-fsa-redux-saga": "^1.1.1"
   },
   "sw-precache": {
     "maximumFileSizeToCacheInBytes": 10485760

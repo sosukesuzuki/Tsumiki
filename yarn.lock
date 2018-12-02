@@ -614,6 +614,12 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/redux-saga@^0.10.5":
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/@types/redux-saga/-/redux-saga-0.10.5.tgz#80bf21078379ebc97387dbe56e44467b5677fa85"
+  dependencies:
+    redux-saga "*"
+
 "@types/redux@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.0.tgz#f1ebe1e5411518072e4fdfca5c76e16e74c1399a"
@@ -4165,6 +4171,10 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
+redux-saga@*, "redux-saga@>=0.14.0 <0.17.0 || 1.0.0-beta.0 || 1.0.0-beta.1 || 1.0.0-beta.2", redux-saga@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.16.2.tgz#993662e86bc945d8509ac2b8daba3a8c615cc971"
+
 redux@*, redux@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.1.tgz#436cae6cc40fbe4727689d7c8fae44808f1bfef5"
@@ -4921,7 +4931,15 @@ typescript-fsa-reducers@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/typescript-fsa-reducers/-/typescript-fsa-reducers-1.1.0.tgz#b6f00e515a7fe2ad319a6f4f8e642b205405b1c2"
 
-typescript-fsa@^3.0.0-beta-2:
+typescript-fsa-redux-saga@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/typescript-fsa-redux-saga/-/typescript-fsa-redux-saga-1.1.1.tgz#bee346cbd3bffbab4610a44f900ef63aca466fca"
+  dependencies:
+    redux-saga ">=0.14.0 <0.17.0 || 1.0.0-beta.0 || 1.0.0-beta.1 || 1.0.0-beta.2"
+    tslib "^1.7.1"
+    typescript-fsa "^2.0.0 || ^3.0.0-beta-2"
+
+"typescript-fsa@^2.0.0 || ^3.0.0-beta-2", typescript-fsa@^3.0.0-beta-2:
   version "3.0.0-beta-2"
   resolved "https://registry.yarnpkg.com/typescript-fsa/-/typescript-fsa-3.0.0-beta-2.tgz#1cc1d0c014c025fd51cba097776033ac4b6b753c"
 
