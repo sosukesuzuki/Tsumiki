@@ -18,7 +18,7 @@ class DB extends Dexie {
 
 const db = new DB();
 
-export async function getData(): Promise<{
+export async function fetchData(): Promise<{
   columns: Column[];
   todos: Todo[];
   comments: TodoComment[];

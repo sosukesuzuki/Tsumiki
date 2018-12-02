@@ -17,22 +17,45 @@ export enum ActionTypes {
   SetComment = "SET_COMMENT"
 }
 
-export const fetchBoardData = actionCreator(ActionTypes.FetchBoardData);
+export const fetchBoardData = actionCreator.async<
+  null,
+  { columns: Column[]; todos: Todo[]; comments: TodoComment[] }
+>(ActionTypes.FetchBoardData);
+
 export const setBoardData = actionCreator<{
   columns: Column[];
   todos: Todo[];
   comments: [];
 }>(ActionTypes.SetBoardData);
-export const addColumn = actionCreator(ActionTypes.AddColumn);
-export const deleteColumn = actionCreator(ActionTypes.DeleteColumn);
+
+export const addColumn = actionCreator.async<null, null>(ActionTypes.AddColumn);
+
+export const deleteColumn = actionCreator.async<{ column: Column }, null>(
+  ActionTypes.DeleteColumn
+);
+
 export const setColumn = actionCreator<{ column: Column }>(
   ActionTypes.SetColumn
 );
-export const addTodo = actionCreator<{ columnId: string }>(ActionTypes.AddTodo);
+
+export const addTodo = actionCreator.async<{ columnId: string }, null>(
+  ActionTypes.AddTodo
+);
+
+export const deleteTodo = actionCreator.async<{ todo: Todo }, null>(
+  ActionTypes.DeleteTodo
+);
+
 export const setTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetTodo);
-export const addComment = actionCreator<{ todoId: string }>(
+
+export const addComment = actionCreator.async<{ todoId: string }, null>(
   ActionTypes.AddComment
 );
+
+export const deleteComment = actionCreator.async<{ comment: Comment }, null>(
+  ActionTypes.DeleteComment
+);
+
 export const setComment = actionCreator<{
   comment: TodoComment;
 }>(ActionTypes.SetComment);
