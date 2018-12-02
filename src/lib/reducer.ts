@@ -2,7 +2,7 @@ import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { Column, Todo, TodoComment } from "./type";
 import { setBoardData, setColumn, setTodo, setComment } from "./actionCreators";
 
-interface State {
+export interface State {
   columns: Column[];
   todos: Todo[];
   comments: TodoComment[];

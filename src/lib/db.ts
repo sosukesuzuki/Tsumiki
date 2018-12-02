@@ -18,6 +18,10 @@ class DB extends Dexie {
 
 const db = new DB();
 
+export async function drop() {
+  await db.delete();
+}
+
 export async function fetchData(): Promise<{
   columns: Column[];
   todos: Todo[];
