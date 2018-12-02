@@ -259,9 +259,9 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
         <h3>コメントログ</h3>
         {comments
           .filter(comment => comment.todoId === todo.id)
-          .map(comment => {
-            return <CommentComponent key={comment.id} {...comment} />;
-          })}
+          .map(comment => (
+            <CommentComponent key={comment.id} {...comment} />
+          ))}
       </section>
     </Container>
   );
