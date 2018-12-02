@@ -4,13 +4,16 @@ import React, {
   SyntheticEvent,
   KeyboardEvent,
   useRef,
-  useEffect
+  useEffect,
+  ChangeEvent
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo } from "../../lib/type";
+import { Todo, TodoComment } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
+import { State as RootState } from "../../lib/reducer";
+import CommentComponent from "./CommentComponent";
 
 const Container = styled.article`
   position: absolute;
@@ -24,13 +27,21 @@ const Container = styled.article`
   width: 800px;
   height: 600px;
   z-index: 1;
+  section {
+    margin: 15px;
+  }
 `;
 const DetailDisplay = styled.div``;
 const DetailTextarea = styled.textarea``;
 const NameInput = styled.input``;
+const CommentTextarea = styled.textarea``;
 
 type TodoDetailProps = Todo & {
   updateTodo: (todo: Todo) => { type: ActionTypes };
+  addComment: (
+    { todoId, content }: { todoId: string; content: string }
+  ) => { type: ActionTypes };
+  comments: TodoComment[];
 };
 
 interface State {
@@ -38,21 +49,32 @@ interface State {
   contentInDetailInput: string | undefined;
   isTypingNameInput: boolean;
   contentInNameInput: string | undefined;
+  isTypingCommentTextarea: boolean;
+  contentInCommentTextare: string;
 }
 
-const TodoDetail: React.SFC<TodoDetailProps> = ({ updateTodo, ...todo }) => {
+const TodoDetail: React.SFC<TodoDetailProps> = ({
+  updateTodo,
+  addComment,
+  comments,
+  ...todo
+}) => {
   const initialState: State = {
     isTypingDetailInput: false,
     contentInDetailInput: todo.detail,
     isTypingNameInput: false,
-    contentInNameInput: todo.name
+    contentInNameInput: todo.name,
+    isTypingCommentTextarea: false,
+    contentInCommentTextare: ""
   };
   const [
     {
       isTypingDetailInput,
       contentInDetailInput,
       isTypingNameInput,
-      contentInNameInput
+      contentInNameInput,
+      isTypingCommentTextarea,
+      contentInCommentTextare
     },
     setState
   ] = useState(initialState);
@@ -143,6 +165,51 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({ updateTodo, ...todo }) => {
     [contentInDetailInput]
   );
 
+  const onFocusCommentTextarea = useCallback(function() {
+    setState((state: State) => ({
+      ...state,
+      isTypingCommentTextarea: true
+    }));
+  }, []);
+
+  const onBlurCommentTextarea = useCallback(function() {
+    setState((state: State) => ({
+      ...state,
+      isTypingCommentTextarea: false
+    }));
+  }, []);
+
+  const onChangeCommentTextarea = useCallback(function(
+    ev: ChangeEvent<HTMLTextAreaElement>
+  ) {
+    ev.persist();
+    const value = (ev.target as any).value;
+    setState((state: State) => ({
+      ...state,
+      contentInCommentTextare: value
+    }));
+  },
+  []);
+
+  const onKeyPressCommentTextarea = useCallback(
+    function(ev: KeyboardEvent<HTMLTextAreaElement>) {
+      (async () => {
+        if (ev.key === "Enter") {
+          await addComment({
+            todoId: todo.id,
+            content: contentInCommentTextare
+          });
+          setState((state: State) => ({
+            ...state,
+            contentInCommentTextare: "",
+            isTypingCommentTextarea: false
+          }));
+        }
+      })();
+    },
+    [contentInCommentTextare]
+  );
+
   return (
     <Container>
       <section>
@@ -176,18 +243,48 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({ updateTodo, ...todo }) => {
           </div>
         )}
       </section>
+      <section>
+        <h3>コメントを追加</h3>
+        <CommentTextarea
+          placeholder="コメントを入力してください。"
+          onFocus={onFocusCommentTextarea}
+          onBlur={onBlurCommentTextarea}
+          value={contentInCommentTextare}
+          onChange={onChangeCommentTextarea}
+          onKeyPress={onKeyPressCommentTextarea}
+        />
+        <button disabled={!isTypingCommentTextarea}>保存</button>
+      </section>
+      <section>
+        <h3>コメントログ</h3>
+        {comments
+          .filter(comment => comment.todoId === todo.id)
+          .map(comment => {
+            return <CommentComponent key={comment.id} {...comment} />;
+          })}
+      </section>
     </Container>
   );
 };
 
 export default connect(
-  null,
+  (state: RootState) => ({
+    comments: state.comments
+  }),
   dispatch => ({
     updateTodo: (todo: Todo) =>
       dispatch({
         type: ActionTypes.UpdateTodo,
         payload: {
           todo
+        }
+      }),
+    addComment: ({ todoId, content }: { todoId: string; content: string }) =>
+      dispatch({
+        type: ActionTypes.AddComment,
+        payload: {
+          todoId,
+          content
         }
       })
   })

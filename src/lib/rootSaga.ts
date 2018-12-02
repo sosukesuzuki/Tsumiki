@@ -4,7 +4,8 @@ import {
   setBoardData,
   setColumn,
   ActionTypes,
-  setTodo
+  setTodo,
+  setComment
 } from "./actionCreators";
 import * as DB from "./db";
 import {
@@ -61,9 +62,10 @@ function* updateTodoSaga(): SagaIterator {
 function* addCommentSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.AddComment);
-    const { todoId } = payload;
-    const comment = generateComment({ content: "", todoId });
+    const { todoId, content } = payload;
+    const comment = generateComment({ content, todoId });
     yield call(DB.addComment, comment);
+    yield put(setComment({ comment }));
   }
 }
 

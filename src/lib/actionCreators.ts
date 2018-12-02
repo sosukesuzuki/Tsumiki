@@ -66,9 +66,10 @@ export const updateTodo = actionCreator.async<
 
 export const setTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetTodo);
 
-export const addComment = actionCreator.async<{ todoId: string }, null>(
-  ActionTypes.AddComment
-);
+export const addComment = actionCreator.async<
+  { todoId: string; content: string },
+  null
+>(ActionTypes.AddComment);
 
 export const deleteComment = actionCreator.async<{ comment: Comment }, null>(
   ActionTypes.DeleteComment
