@@ -3,7 +3,8 @@ import React, {
   useCallback,
   useRef,
   SyntheticEvent,
-  KeyboardEvent
+  KeyboardEvent,
+  useEffect
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -19,12 +20,15 @@ const Container = styled.div`
   background-color: ${colors.light};
   color: ${colors.heavy};
   margin: 0 15px;
-
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
-
-  display: inline-block;
+  input {
+    height: 25px;
+  }
+  h3 {
+    cursor: pointer;
+  }
 `;
 
 type ColumnComponentProps = Column & {
@@ -53,6 +57,12 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   const [state, setState] = useState(initialState);
 
   const columnInputEl = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (columnInputEl && columnInputEl.current) {
+      columnInputEl.current.focus();
+    }
+  });
 
   const onClickColumnName = useCallback(
     function() {
