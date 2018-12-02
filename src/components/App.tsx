@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Provider } from "react-redux";
+import store from "../lib/store";
 import TopNavigation from "./templates/TopNavigator";
 import Board from "./templates/Board";
 
@@ -13,10 +15,12 @@ const Container = styled.div`
 
 const App = () => {
   return (
-    <Container>
-      <TopNavigation />
-      <Board />
-    </Container>
+    <Provider store={store}>
+      <Container>
+        <TopNavigation />
+        <Board />
+      </Container>
+    </Provider>
   );
 };
 
