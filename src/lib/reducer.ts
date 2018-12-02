@@ -43,27 +43,30 @@ const reducer = reducerWithInitialState(initialState)
       };
     }
   })
-  .case(setTodo, (state: State, { todo }) => {
-    const res = _.find(state.todos, ({ id }: Todo) => id === todo.id);
-    if (res == null) {
-      return {
-        ...state,
-        todos: [...state.todos, todo]
-      };
-    } else {
-      const { todos } = state;
-      const newTodos = todos.map(stateTodo => {
-        if (stateTodo.id === todo.id) {
-          return todo;
-        }
-        return stateTodo;
-      });
-      return {
-        ...state,
-        todos: newTodos
-      };
+  .case(
+    setTodo,
+    (state: State, { todo }): State => {
+      const res = _.find(state.todos, ({ id }: Todo) => id === todo.id);
+      if (res == null) {
+        return {
+          ...state,
+          todos: [...state.todos, todo as Todo]
+        };
+      } else {
+        const { todos } = state;
+        const newTodos = todos.map(stateTodo => {
+          if (stateTodo.id === todo.id) {
+            return todo;
+          }
+          return stateTodo;
+        });
+        return {
+          ...state,
+          todos: newTodos
+        };
+      }
     }
-  })
+  )
   .case(setComment, (state: State, { comment }) => ({
     ...state,
     comments: [...state.comments, comment]

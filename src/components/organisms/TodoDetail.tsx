@@ -1,7 +1,7 @@
 import React, { useState, useCallback, SyntheticEvent } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo, OnlyIdRequiredTodo } from "../../lib/type";
+import { Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 
@@ -22,7 +22,7 @@ const DetailDisplay = styled.div``;
 const DetailTextarea = styled.textarea``;
 
 type TodoDetailProps = Todo & {
-  updateTodo: (todo: OnlyIdRequiredTodo) => { type: ActionTypes };
+  updateTodo: (todo: Todo) => { type: ActionTypes };
 };
 
 interface State {
@@ -30,16 +30,10 @@ interface State {
   contentInDetailInput: string | undefined;
 }
 
-const TodoDetail: React.SFC<TodoDetailProps> = ({
-  name,
-  detail,
-  id,
-  columnId,
-  updateTodo
-}) => {
+const TodoDetail: React.SFC<TodoDetailProps> = ({ updateTodo, ...todo }) => {
   const initialState: State = {
     isTypingDetailInput: false,
-    contentInDetailInput: detail
+    contentInDetailInput: todo.detail
   };
   const [{ isTypingDetailInput, contentInDetailInput }, setState] = useState(
     initialState
@@ -67,11 +61,9 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     function() {
       (async () => {
         await updateTodo({
-          name,
-          detail: contentInDetailInput,
+          ...todo,
           updatedAt: Date.now().toString(),
-          columnId,
-          id
+          detail: contentInDetailInput
         });
         setState((state: State) => ({
           ...state,
@@ -91,7 +83,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
         <h3>詳細説明</h3>
         {!isTypingDetailInput ? (
           <DetailDisplay onClick={onClickDetailDisplay}>
-            {detail || "詳しい説明を追加してください。"}
+            {todo.detail || "詳しい説明を追加してください。"}
           </DetailDisplay>
         ) : (
           <div>
@@ -112,7 +104,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 export default connect(
   null,
   dispatch => ({
-    updateTodo: (todo: OnlyIdRequiredTodo) =>
+    updateTodo: (todo: Todo) =>
       dispatch({
         type: ActionTypes.UpdateTodo,
         payload: {
