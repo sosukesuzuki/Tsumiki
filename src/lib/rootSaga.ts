@@ -1,11 +1,12 @@
 import { SagaIterator } from "redux-saga";
-import { fork, call, put, take } from "redux-saga/effects";
+import { fork, call, put, take, select, all } from "redux-saga/effects";
 import {
   setBoardData,
   setColumn,
   ActionTypes,
   setTodo,
-  setComment
+  setComment,
+  fetchBoardData
 } from "./actionCreators";
 import * as DB from "./db";
 import {
@@ -13,6 +14,9 @@ import {
   generateTodo,
   generateComment
 } from "./ItemGenerators";
+import { State } from "./reducer";
+import { Todo, TodoComment } from "./type";
+import _ from "lodash";
 
 function* fetchBoardDataSaga(): SagaIterator {
   while (true) {
@@ -28,6 +32,30 @@ function* addColumnSaga(): SagaIterator {
     const column = generateColumn({ name: "" });
     yield call(DB.addColumn, column);
     yield put(setColumn({ column }));
+  }
+}
+
+function* deleteColumnSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.DeleteColumn);
+    const { columnId } = payload;
+    const todos: Todo[] = yield select((state: State) => state.todos);
+    const comments: TodoComment[] = yield select(
+      (state: State) => state.comments
+    );
+
+    const relatedTodos = todos.filter(todo => todo.columnId === columnId);
+    const relatedComments = _.flatMap(relatedTodos, todo => {
+      return comments.filter(comment => comment.todoId === todo.id);
+    });
+
+    yield all(relatedTodos.map(todo => call(DB.deleteTodo, todo.id)));
+    yield all(
+      relatedComments.map(comment => call(DB.deleteComment, comment.id))
+    );
+    yield call(DB.deleteColumn, columnId);
+
+    yield put(fetchBoardData);
   }
 }
 
@@ -76,4 +104,5 @@ export default function*(): SagaIterator {
   yield fork(addTodoSaga);
   yield fork(updateTodoSaga);
   yield fork(addCommentSaga);
+  yield fork(deleteColumnSaga);
 }

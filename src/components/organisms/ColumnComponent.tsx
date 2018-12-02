@@ -45,6 +45,11 @@ type ColumnComponentProps = Column & {
   ) => {
     type: ActionTypes;
   };
+  deleteColumn: (
+    { columnId }: { columnId: string }
+  ) => {
+    type: ActionTypes;
+  };
 };
 
 interface State {
@@ -62,7 +67,8 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   id,
   updateColumn,
   addTodo,
-  todos
+  todos,
+  deleteColumn
 }) => {
   const [state, setState] = useState(initialState);
 
@@ -134,6 +140,14 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     })();
   }, []);
 
+  const onClickClumnDeleteButton = useCallback(function(columnId: string) {
+    (async () => {
+      await deleteColumn({
+        columnId
+      });
+    })();
+  }, []);
+
   const { isTypingColumnName, contentInColumnNameInput } = state;
   return (
     <Container>
@@ -150,6 +164,7 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
             ref={columnInputEl}
           />
         )}
+        <button onClick={() => onClickClumnDeleteButton(id)}>x</button>
       </div>
       <div>
         {todos
@@ -173,6 +188,8 @@ export default connect(
     updateColumn: (column: OnlyIdRequiredColumn) =>
       dispatch({ type: ActionTypes.UpdateColumn, payload: { column } }),
     addTodo: ({ columnId }: { columnId: string }) =>
-      dispatch({ type: ActionTypes.AddTodo, payload: { columnId } })
+      dispatch({ type: ActionTypes.AddTodo, payload: { columnId } }),
+    deleteColumn: ({ columnId }: { columnId: string }) =>
+      dispatch({ type: ActionTypes.DeleteColumn, payload: { columnId } })
   })
 )(ColumnComponent);
