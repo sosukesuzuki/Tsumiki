@@ -27,6 +27,7 @@ const Container = styled.article`
   width: 800px;
   height: 600px;
   z-index: 1;
+  display: flex;
   section {
     margin: 15px;
   }
@@ -41,6 +42,7 @@ type TodoDetailProps = Todo & {
   addComment: (
     { todoId, content }: { todoId: string; content: string }
   ) => { type: ActionTypes };
+  deleteTodo: ({ todoId }: { todoId: string }) => { type: ActionTypes };
   comments: TodoComment[];
 };
 
@@ -56,6 +58,7 @@ interface State {
 const TodoDetail: React.SFC<TodoDetailProps> = ({
   updateTodo,
   addComment,
+  deleteTodo,
   comments,
   ...todo
 }) => {
@@ -209,58 +212,71 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     [contentInCommentTextare]
   );
 
+  const onClickDeleteTodoButton = useCallback(function(todoId: string) {
+    (async () => {
+      await deleteTodo({ todoId });
+    })();
+  }, []);
+
   return (
     <Container>
-      <section>
-        {!isTypingNameInput ? (
-          <h2 onClick={onClickName}>{todo.name || "名前はありません"}</h2>
-        ) : (
-          <NameInput
-            value={contentInNameInput}
-            onChange={onChangeNameInput}
-            onKeyPress={onKeyPressNameInput}
-            onBlur={onBlurNameInput}
-            ref={nameInputEl}
-          />
-        )}
-      </section>
-      <section>
-        <h3>詳細説明</h3>
-        {!isTypingDetailInput ? (
-          <DetailDisplay onClick={onClickDetailDisplay}>
-            {todo.detail || "詳しい説明を追加してください。"}
-          </DetailDisplay>
-        ) : (
-          <div>
-            <DetailTextarea
-              value={contentInDetailInput}
-              placeholder="詳しい説明を追加してください..."
-              onChange={onChangeDetailTextarea}
-              autoFocus
+      <div>
+        <section>
+          {!isTypingNameInput ? (
+            <h2 onClick={onClickName}>{todo.name || "名前はありません"}</h2>
+          ) : (
+            <NameInput
+              value={contentInNameInput}
+              onChange={onChangeNameInput}
+              onKeyPress={onKeyPressNameInput}
+              onBlur={onBlurNameInput}
+              ref={nameInputEl}
             />
-            <button onClick={onClickDetailSaveButton}>保存</button>
-          </div>
-        )}
-      </section>
-      <section>
-        <h3>コメントを追加</h3>
-        <CommentTextarea
-          placeholder="コメントを入力してください。"
-          onFocus={onFocusCommentTextarea}
-          onBlur={onBlurCommentTextarea}
-          value={contentInCommentTextare}
-          onChange={onChangeCommentTextarea}
-          onKeyPress={onKeyPressCommentTextarea}
-        />
-      </section>
-      <section>
-        <h3>コメントログ</h3>
-        {comments
-          .filter(comment => comment.todoId === todo.id)
-          .map(comment => (
-            <CommentComponent key={comment.id} {...comment} />
-          ))}
-      </section>
+          )}
+        </section>
+        <section>
+          <h3>詳細説明</h3>
+          {!isTypingDetailInput ? (
+            <DetailDisplay onClick={onClickDetailDisplay}>
+              {todo.detail || "詳しい説明を追加してください。"}
+            </DetailDisplay>
+          ) : (
+            <div>
+              <DetailTextarea
+                value={contentInDetailInput}
+                placeholder="詳しい説明を追加してください..."
+                onChange={onChangeDetailTextarea}
+                autoFocus
+              />
+              <button onClick={onClickDetailSaveButton}>保存</button>
+            </div>
+          )}
+        </section>
+        <section>
+          <h3>コメントを追加</h3>
+          <CommentTextarea
+            placeholder="コメントを入力してください。"
+            onFocus={onFocusCommentTextarea}
+            onBlur={onBlurCommentTextarea}
+            value={contentInCommentTextare}
+            onChange={onChangeCommentTextarea}
+            onKeyPress={onKeyPressCommentTextarea}
+          />
+        </section>
+        <section>
+          <h3>コメントログ</h3>
+          {comments
+            .filter(comment => comment.todoId === todo.id)
+            .map(comment => (
+              <CommentComponent key={comment.id} {...comment} />
+            ))}
+        </section>
+      </div>
+      <div>
+        <button onClick={() => onClickDeleteTodoButton(todo.id)}>
+          このカードを削除する。
+        </button>
+      </div>
     </Container>
   );
 };
@@ -283,6 +299,13 @@ export default connect(
         payload: {
           todoId,
           content
+        }
+      }),
+    deleteTodo: ({ todoId }: { todoId: string }) =>
+      dispatch({
+        type: ActionTypes.DeleteTodo,
+        payload: {
+          todoId
         }
       })
   })

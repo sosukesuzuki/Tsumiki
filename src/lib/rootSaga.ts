@@ -87,6 +87,28 @@ function* updateTodoSaga(): SagaIterator {
   }
 }
 
+function* deleteTodoSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.DeleteTodo);
+    const { todoId } = payload;
+
+    const comments: TodoComment[] = yield select(
+      (state: State) => state.comments
+    );
+
+    const relatedComments = comments.filter(
+      comment => comment.todoId === todoId
+    );
+
+    yield all(
+      relatedComments.map(comment => call(DB.deleteComment, comment.id))
+    );
+    yield call(DB.deleteTodo, todoId);
+
+    yield put(fetchBoardData);
+  }
+}
+
 function* addCommentSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.AddComment);
@@ -105,4 +127,5 @@ export default function*(): SagaIterator {
   yield fork(updateTodoSaga);
   yield fork(addCommentSaga);
   yield fork(deleteColumnSaga);
+  yield fork(deleteTodoSaga);
 }
