@@ -57,11 +57,6 @@ interface State {
   contentInColumnNameInput?: string;
 }
 
-const initialState: State = {
-  isTypingColumnName: false,
-  contentInColumnNameInput: undefined
-};
-
 const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   name,
   id,
@@ -70,6 +65,11 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   todos,
   deleteColumn
 }) => {
+  const initialState: State = {
+    isTypingColumnName: false,
+    contentInColumnNameInput: name
+  };
+
   const [state, setState] = useState(initialState);
 
   const columnInputEl = useRef<HTMLInputElement>(null);
@@ -80,14 +80,20 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     }
   });
 
+  useEffect(() => {
+    if (name === "")
+      setState({
+        ...state,
+        isTypingColumnName: true
+      });
+  }, []);
+
   const onClickColumnName = useCallback(
     function() {
-      const { isTypingColumnName } = state;
-      if (!isTypingColumnName) {
+      if (!state.isTypingColumnName) {
         setState((state: State) => ({
           ...state,
-          isTypingColumnName: true,
-          contentInColumnNameInput: ""
+          isTypingColumnName: true
         }));
       }
     },
@@ -103,7 +109,6 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
         });
         setState((state: State) => ({
           ...state,
-          contentInColumnNameInput: undefined,
           isTypingColumnName: false
         }));
       }
@@ -125,13 +130,20 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
 
   const onBlurColumnNameInput = useCallback(
     function() {
+      const relatedTodos = todos.filter(todo => todo.columnId === id);
+      if (
+        relatedTodos.length === 0 &&
+        contentInColumnNameInput === "" &&
+        name === ""
+      ) {
+        deleteColumn({ columnId: id });
+      }
       setState((state: State) => ({
         ...state,
-        isTypingColumnName: false,
-        contentInColumnNameInput: undefined
+        isTypingColumnName: false
       }));
     },
-    [state.contentInColumnNameInput, state.isTypingColumnName]
+    [state.contentInColumnNameInput, state.isTypingColumnName, name]
   );
 
   const onClickAddTodoButton = useCallback(function(columnId: string) {
@@ -149,7 +161,7 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     <Container>
       <div>
         {!isTypingColumnName ? (
-          <h3 onClick={onClickColumnName}>{name || "名前はありません。"}</h3>
+          <h3 onClick={onClickColumnName}>{name}</h3>
         ) : (
           <input
             type="text"
