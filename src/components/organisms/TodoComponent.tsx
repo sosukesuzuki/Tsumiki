@@ -29,18 +29,16 @@ const initialState: State = {
   isShownTodoModal: false
 };
 
-const TodoComponent: React.SFC<TodoComponentProps> = (todo: Todo) => {
+const TodoComponent: React.SFC<TodoComponentProps> = ({ ...todo }) => {
   const { name } = todo;
-  const [state, setState] = useState(initialState);
-  const onClickTodoComponent = useCallback(
-    function() {
-      setState((state: State) => ({
-        ...state,
-        isShownTodoModal: true
-      }));
-    },
-    [state.isShownTodoModal]
-  );
+  const [{ isShownTodoModal }, setState] = useState(initialState);
+
+  const onClickTodoComponent = useCallback(function() {
+    setState((state: State) => ({
+      ...state,
+      isShownTodoModal: true
+    }));
+  }, []);
 
   const onClickTodoModal = useCallback(function() {
     setState((state: State) => ({
@@ -49,7 +47,6 @@ const TodoComponent: React.SFC<TodoComponentProps> = (todo: Todo) => {
     }));
   }, []);
 
-  const { isShownTodoModal } = state;
   return (
     <>
       <Container onClick={onClickTodoComponent}>
