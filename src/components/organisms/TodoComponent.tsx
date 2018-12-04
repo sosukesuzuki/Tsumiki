@@ -11,7 +11,7 @@ import { Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import TodoDetail from "./TodoDetail";
 import { ActionTypes } from "../../lib/actionCreators";
-import Input from "../atoms/Input";
+import Textarea from "../atoms/Textarea";
 
 const Container = styled.div`
   margin: 5px 0;
@@ -40,7 +40,7 @@ const TodoModal = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 0;
 `;
-const TodoNameInput = styled(Input)`
+const TodoNameTextarea = styled(Textarea)`
   width: 100%;
   margin: 5px 0;
   height: 60px;
@@ -76,11 +76,11 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
     isTypingTodoName: name === ""
   };
 
-  const todoNameInputEl = useRef<HTMLInputElement>(null);
+  const todoNameTextareaEl = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (todoNameInputEl && todoNameInputEl.current) {
-      todoNameInputEl.current.focus();
+    if (todoNameTextareaEl && todoNameTextareaEl.current) {
+      todoNameTextareaEl.current.focus();
     }
   });
 
@@ -113,21 +113,21 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
     [isTypingTodoName]
   );
 
-  const onBlurTodoNameInput = useCallback(
+  const onBlurTodoNameTextarea = useCallback(
     function() {
       deleteTodo({ todoId: todo.id });
     },
     [todo.id]
   );
 
-  const onKeyPressTodoNameInput = useCallback(function(
-    ev: KeyboardEvent<HTMLInputElement>
+  const onKeyPressTodoNameTextarea = useCallback(function(
+    ev: KeyboardEvent<HTMLTextAreaElement>
   ) {
     if (ev.key === "Enter") {
       updateTodo({
         todo: {
           ...todo,
-          name: todoNameInputEl.current!.value
+          name: todoNameTextareaEl.current!.value
         }
       });
       setState((state: State) => ({
@@ -145,11 +145,10 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
           <h4>{name || "名前はありません"}</h4>
         </Container>
       ) : (
-        <TodoNameInput
-          type="text"
-          ref={todoNameInputEl}
-          onBlur={onBlurTodoNameInput}
-          onKeyPress={onKeyPressTodoNameInput}
+        <TodoNameTextarea
+          ref={todoNameTextareaEl}
+          onBlur={onBlurTodoNameTextarea}
+          onKeyPress={onKeyPressTodoNameTextarea}
         />
       )}
       {isShownTodoModal && (
