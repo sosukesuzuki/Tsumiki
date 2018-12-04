@@ -4,6 +4,8 @@ import colors from "../../lib/colors";
 import { connect } from "react-redux";
 import { ActionTypes } from "../../lib/actionCreators";
 
+// UNUSED!!
+
 const Container = styled.nav`
   background-color: ${colors.heavy};
   color: ${colors.light};
