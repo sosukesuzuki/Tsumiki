@@ -3,7 +3,6 @@ import React, {
   useState,
   useEffect,
   useRef,
-  SyntheticEvent,
   KeyboardEvent
 } from "react";
 import { connect } from "react-redux";
