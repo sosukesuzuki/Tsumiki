@@ -13,6 +13,8 @@ import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import TodoComponent from "./TodoComponent";
+import Input from "../atoms/Input";
+import Button from "../atoms/Button";
 
 const Container = styled.div`
   width: 200px;
@@ -22,14 +24,41 @@ const Container = styled.div`
   margin: 0 15px;
   padding: 10px;
   overflow-x: auto;
-  input {
-    height: 25px;
-    margin: 0;
-  }
+  border-radius: 1px;
+`;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
   h3 {
-    cursor: pointer;
-    height: 25px;
     margin: 0;
+    font-size: 17px;
+    line-height: 20px;
+    width: 170px;
+    height: 20px;
+    cursor: pointer;
+  }
+`;
+const DeleteColumnButton = styled(Button)`
+  width: 20px;
+  height: 20px;
+  color: ${colors.middle};
+  &:hover {
+    font-weight: bold;
+  }
+`;
+const ColumnTitleInput = styled(Input)`
+  width: 170px;
+`;
+const AddCardButton = styled(Button)`
+  border-radius: 0.5px;
+  width: 100%;
+  border: 1px solid ${colors.middle};
+  margin-top: 10px;
+  padding: 5px 0;
+  transition: 0.1s;
+  &:hover {
+    background-color: rgba(168, 168, 168, 0.1);
+    transition: 0.1s;
   }
 `;
 
@@ -140,6 +169,7 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
       }
       setState((state: State) => ({
         ...state,
+        contentInColumnNameInput: name,
         isTypingColumnName: false
       }));
     },
@@ -159,11 +189,11 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   const { isTypingColumnName, contentInColumnNameInput } = state;
   return (
     <Container>
-      <div>
+      <Header>
         {!isTypingColumnName ? (
           <h3 onClick={onClickColumnName}>{name}</h3>
         ) : (
-          <input
+          <ColumnTitleInput
             type="text"
             value={contentInColumnNameInput}
             onKeyPress={onKeyPressColumnNameInput}
@@ -172,8 +202,10 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
             ref={columnInputEl}
           />
         )}
-        <button onClick={() => onClickClumnDeleteButton(id)}>x</button>
-      </div>
+        <DeleteColumnButton onClick={() => onClickClumnDeleteButton(id)}>
+          <span>&times;</span>
+        </DeleteColumnButton>
+      </Header>
       <div>
         {todos
           .filter(todo => todo.columnId === id)
@@ -181,9 +213,9 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
             <TodoComponent {...todo} key={todo.id} />
           ))}
       </div>
-      <button onClick={() => onClickAddTodoButton(id)}>
+      <AddCardButton onClick={() => onClickAddTodoButton(id)}>
         + さらにカードを追加
-      </button>
+      </AddCardButton>
     </Container>
   );
 };
