@@ -3,7 +3,7 @@ export default {
   middle: "gray",
   light: "white"
 };
-const tsumiki = {
+export const tsumiki = {
   1: "#a36185",
   2: "#ffa7cd",
   3: "#de4c95",
