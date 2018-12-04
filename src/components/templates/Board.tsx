@@ -17,6 +17,19 @@ const Container = styled.main`
 const AddListButton = styled.div`
   background-color: ${colors.light};
   height: 40px;
+  width: 200px;
+  padding: 15px;
+  cursor: pointer;
+  color: ${colors.middle};
+  transition: 0.1s;
+  border-radius: 1px;
+  margin: 0 10px;
+  &:hover {
+    height: 40px;
+    width: 200px;
+    transition: 0.1s;
+    color: ${colors.heavy};
+  }
 `;
 
 type BoardProps = {

@@ -11,11 +11,25 @@ import { Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import TodoDetail from "./TodoDetail";
 import { ActionTypes } from "../../lib/actionCreators";
+import Input from "../atoms/Input";
 
 const Container = styled.div`
   margin: 5px 0;
   background-color: ${colors.light};
-  border: 1px solid ${colors.heavy};
+  border: 1px solid ${colors.middle};
+  height: 45px;
+  transition: 0.1s;
+  padding: 15px;
+  cursor: pointer;
+  h4 {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &:hover {
+    transition: 0.1s;
+    background-color: rgba(168, 168, 168, 0.1);
+  }
 `;
 const TodoModal = styled.div`
   position: absolute;
@@ -26,7 +40,11 @@ const TodoModal = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 0;
 `;
-const TodoNameInput = styled.input``;
+const TodoNameInput = styled(Input)`
+  width: 100%;
+  margin: 5px 0;
+  height: 60px;
+`;
 
 type TodoComponentProps = Todo & {
   deleteTodo: (
@@ -79,11 +97,10 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
   );
 
   const onClickTodoComponent = useCallback(function() {
-    isTypingTodoName ||
-      setState((state: State) => ({
-        ...state,
-        isShownTodoModal: true
-      }));
+    setState((state: State) => ({
+      ...state,
+      isShownTodoModal: true
+    }));
   }, []);
 
   const onClickTodoModal = useCallback(
@@ -123,18 +140,18 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
 
   return (
     <>
-      <Container onClick={onClickTodoComponent}>
-        {!isTypingTodoName ? (
+      {!isTypingTodoName ? (
+        <Container onClick={onClickTodoComponent}>
           <h4>{name || "名前はありません"}</h4>
-        ) : (
-          <TodoNameInput
-            type="text"
-            ref={todoNameInputEl}
-            onBlur={onBlurTodoNameInput}
-            onKeyPress={onKeyPressTodoNameInput}
-          />
-        )}
-      </Container>
+        </Container>
+      ) : (
+        <TodoNameInput
+          type="text"
+          ref={todoNameInputEl}
+          onBlur={onBlurTodoNameInput}
+          onKeyPress={onKeyPressTodoNameInput}
+        />
+      )}
       {isShownTodoModal && (
         <>
           <TodoModal onClick={onClickTodoModal} />

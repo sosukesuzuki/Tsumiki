@@ -22,7 +22,7 @@ const Container = styled.div`
   background-color: ${colors.light};
   color: ${colors.heavy};
   margin: 0 15px;
-  padding: 10px;
+  padding: 15px;
   overflow-x: auto;
   border-radius: 1px;
 `;
@@ -60,6 +60,9 @@ const AddCardButton = styled(Button)`
     background-color: rgba(168, 168, 168, 0.1);
     transition: 0.1s;
   }
+`;
+const Columns = styled.div`
+  margin-top: 15px;
 `;
 
 type ColumnComponentProps = Column & {
@@ -206,13 +209,13 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
           <span>&times;</span>
         </DeleteColumnButton>
       </Header>
-      <div>
+      <Columns>
         {todos
           .filter(todo => todo.columnId === id)
           .map(todo => (
             <TodoComponent {...todo} key={todo.id} />
           ))}
-      </div>
+      </Columns>
       <AddCardButton onClick={() => onClickAddTodoButton(id)}>
         + さらにカードを追加
       </AddCardButton>
