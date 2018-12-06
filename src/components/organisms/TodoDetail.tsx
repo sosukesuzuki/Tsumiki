@@ -14,6 +14,9 @@ import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import CommentComponent from "./CommentComponent";
+import Input from "../atoms/Input";
+import Textarea from "../atoms/Textarea";
+import Button from "../atoms/Button";
 
 const Container = styled.article`
   position: absolute;
@@ -28,14 +31,53 @@ const Container = styled.article`
   height: 600px;
   z-index: 1;
   display: flex;
+  justify-content: space-between;
+  padding: 30px;
+  h2 {
+    font-size: 25px;
+    line-height: 20px;
+  }
   section {
     margin: 15px;
   }
 `;
-const DetailDisplay = styled.div``;
-const DetailTextarea = styled.textarea``;
-const NameInput = styled.input``;
-const CommentTextarea = styled.textarea``;
+const MainContent = styled.div`
+  width: 100%;
+`;
+const DetailDisplay = styled.div`
+  cursor: pointer;
+`;
+const DetailTextarea = styled(Textarea)`
+  width: 100%;
+  min-height: 120px;
+`;
+const NameInput = styled(Input)`
+  font-size: 25px;
+  height: 25px;
+  width: 100%;
+`;
+const CommentTextarea = styled(Textarea)`
+  width: 100%;
+  height: 60px;
+  box-shadow: none;
+  box-shadow: 0 0 0 1px ${colors.middle};
+  &:focus {
+    border: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+  }
+`;
+const CommentSaveButton = styled(Button)`
+  border: 1px solid ${colors.middle};
+  border-radius: 0.5px;
+  margin-top: 10px;
+  padding: 10px;
+  width: 100px;
+  transition: 0.1s;
+  &:hover {
+    transition: 0.1s;
+    background-color: rgba(168, 168, 168, 0.1);
+  }
+`;
 
 type TodoDetailProps = Todo & {
   updateTodo: (todo: Todo) => { type: ActionTypes };
@@ -194,6 +236,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
   const onKeyPressCommentTextarea = useCallback(
     function(ev: KeyboardEvent<HTMLTextAreaElement>) {
       if (ev.key === "Enter") {
+        ev.preventDefault();
         addComment({
           todoId: todo.id,
           content: contentInCommentTextare
@@ -214,7 +257,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 
   return (
     <Container>
-      <div>
+      <MainContent>
         <section>
           {!isTypingNameInput ? (
             <h2 onClick={onClickName}>{todo.name || "名前はありません"}</h2>
@@ -242,7 +285,9 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
                 onChange={onChangeDetailTextarea}
                 autoFocus
               />
-              <button onClick={onClickDetailSaveButton}>保存</button>
+              <CommentSaveButton onClick={onClickDetailSaveButton}>
+                保存
+              </CommentSaveButton>
             </div>
           )}
         </section>
@@ -265,7 +310,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
               <CommentComponent key={comment.id} {...comment} />
             ))}
         </section>
-      </div>
+      </MainContent>
       <div>
         <button onClick={() => onClickDeleteTodoButton(todo.id)}>
           このカードを削除する。
