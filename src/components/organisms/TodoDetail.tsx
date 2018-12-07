@@ -3,8 +3,6 @@ import React, {
   useCallback,
   SyntheticEvent,
   KeyboardEvent,
-  useRef,
-  useEffect,
   ChangeEvent
 } from "react";
 import { connect } from "react-redux";
@@ -14,9 +12,9 @@ import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import CommentComponent from "./CommentComponent";
-import Input from "../atoms/Input";
 import Textarea from "../atoms/Textarea";
 import Button from "../atoms/Button";
+import TodoNameSection from "../molecules/TodoDetail/TodoNameSection";
 
 const Container = styled.article`
   position: absolute;
@@ -33,10 +31,6 @@ const Container = styled.article`
   display: flex;
   justify-content: space-between;
   padding: 30px;
-  h2 {
-    font-size: 25px;
-    line-height: 20px;
-  }
   section {
     margin: 15px;
   }
@@ -50,11 +44,6 @@ const DetailDisplay = styled.div`
 const DetailTextarea = styled(Textarea)`
   width: 100%;
   min-height: 120px;
-`;
-const NameInput = styled(Input)`
-  font-size: 25px;
-  height: 25px;
-  width: 100%;
 `;
 const CommentTextarea = styled(Textarea)`
   width: 100%;
@@ -113,66 +102,9 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     contentInCommentTextare: ""
   };
   const [
-    {
-      isTypingDetailInput,
-      contentInDetailInput,
-      isTypingNameInput,
-      contentInNameInput,
-      contentInCommentTextare
-    },
+    { isTypingDetailInput, contentInDetailInput, contentInCommentTextare },
     setState
   ] = useState(initialState);
-
-  const nameInputEl = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (nameInputEl && nameInputEl.current) nameInputEl.current.focus();
-  });
-
-  const onClickName = useCallback(function() {
-    setState((state: State) => ({
-      ...state,
-      isTypingNameInput: true
-    }));
-  }, []);
-
-  const onChangeNameInput = useCallback(
-    function(ev: SyntheticEvent<HTMLInputElement>) {
-      ev.persist();
-      const value = (ev.target as any).value;
-      setState((state: State) => ({
-        ...state,
-        contentInNameInput: value
-      }));
-    },
-    [contentInNameInput]
-  );
-
-  const onKeyPressNameInput = useCallback(
-    function(ev: KeyboardEvent<HTMLInputElement>) {
-      if (ev.key === "Enter") {
-        (async () => {
-          if (contentInNameInput == null) return;
-          updateTodo({
-            ...todo,
-            name: contentInNameInput
-          });
-          setState((state: State) => ({
-            ...state,
-            isTypingNameInput: false
-          }));
-        })();
-      }
-    },
-    [contentInNameInput]
-  );
-
-  const onBlurNameInput = useCallback(function() {
-    setState((state: State) => ({
-      ...state,
-      isTypingNameInput: false
-    }));
-  }, []);
 
   const onClickDetailDisplay = useCallback(function() {
     setState((state: State) => ({
@@ -258,19 +190,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
   return (
     <Container>
       <MainContent>
-        <section>
-          {!isTypingNameInput ? (
-            <h2 onClick={onClickName}>{todo.name || "名前はありません"}</h2>
-          ) : (
-            <NameInput
-              value={contentInNameInput}
-              onChange={onChangeNameInput}
-              onKeyPress={onKeyPressNameInput}
-              onBlur={onBlurNameInput}
-              ref={nameInputEl}
-            />
-          )}
-        </section>
+        <TodoNameSection {...todo} />
         <section>
           <h3>詳細説明</h3>
           {!isTypingDetailInput ? (
