@@ -14,7 +14,8 @@ import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import TodoComponent from "./TodoComponent";
 import Input from "../atoms/Input";
-import Button from "../atoms/Button";
+import BoxButton from "../atoms/BoxButton";
+import IconButton from "../atoms/IconButton";
 
 const Container = styled.div`
   width: 200px;
@@ -38,28 +39,13 @@ const Header = styled.div`
     cursor: pointer;
   }
 `;
-const DeleteColumnButton = styled(Button)`
-  width: 20px;
-  height: 20px;
-  color: ${colors.middle};
-  &:hover {
-    font-weight: bold;
-  }
-`;
+const DeleteColumnButton = styled(IconButton)``;
 const ColumnTitleInput = styled(Input)`
   width: 170px;
 `;
-const AddCardButton = styled(Button)`
-  border-radius: 0.5px;
+const AddCardButton = styled(BoxButton)`
   width: 100%;
-  border: 1px solid ${colors.middle};
   margin-top: 10px;
-  padding: 5px 0;
-  transition: 0.1s;
-  &:hover {
-    background-color: rgba(168, 168, 168, 0.1);
-    transition: 0.1s;
-  }
 `;
 const Columns = styled.div`
   margin-top: 15px;
