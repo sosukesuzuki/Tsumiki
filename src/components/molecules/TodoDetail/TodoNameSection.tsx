@@ -16,6 +16,7 @@ const Container = styled.section``;
 const Text = styled.h2`
   font-size: 25px;
   line-height: 20px;
+  cursor: pointer;
 `;
 const Input = styled(InputAtom)`
   font-size: 25px;

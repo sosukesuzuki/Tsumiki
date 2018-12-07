@@ -1,7 +1,6 @@
 import React, {
   useState,
   useCallback,
-  SyntheticEvent,
   KeyboardEvent,
   ChangeEvent
 } from "react";
@@ -13,8 +12,8 @@ import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import CommentComponent from "./CommentComponent";
 import Textarea from "../atoms/Textarea";
-import Button from "../atoms/Button";
 import TodoNameSection from "../molecules/TodoDetail/TodoNameSection";
+import TodoDescriptionSection from "../molecules/TodoDetail/TodoDescriptionSection";
 
 const Container = styled.article`
   position: absolute;
@@ -38,13 +37,6 @@ const Container = styled.article`
 const MainContent = styled.div`
   width: 100%;
 `;
-const DetailDisplay = styled.div`
-  cursor: pointer;
-`;
-const DetailTextarea = styled(Textarea)`
-  width: 100%;
-  min-height: 120px;
-`;
 const CommentTextarea = styled(Textarea)`
   width: 100%;
   height: 60px;
@@ -53,18 +45,6 @@ const CommentTextarea = styled(Textarea)`
   &:focus {
     border: none;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-  }
-`;
-const CommentSaveButton = styled(Button)`
-  border: 1px solid ${colors.middle};
-  border-radius: 0.5px;
-  margin-top: 10px;
-  padding: 10px;
-  width: 100px;
-  transition: 0.1s;
-  &:hover {
-    transition: 0.1s;
-    background-color: rgba(168, 168, 168, 0.1);
   }
 `;
 
@@ -101,43 +81,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     isTypingCommentTextarea: false,
     contentInCommentTextare: ""
   };
-  const [
-    { isTypingDetailInput, contentInDetailInput, contentInCommentTextare },
-    setState
-  ] = useState(initialState);
-
-  const onClickDetailDisplay = useCallback(function() {
-    setState((state: State) => ({
-      ...state,
-      isTypingDetailInput: true
-    }));
-  }, []);
-
-  const onChangeDetailTextarea = useCallback(function(
-    ev: SyntheticEvent<HTMLTextAreaElement>
-  ) {
-    const value = (ev.target as any).value;
-    setState((state: State) => ({
-      ...state,
-      contentInDetailInput: value
-    }));
-  },
-  []);
-
-  const onClickDetailSaveButton = useCallback(
-    function() {
-      updateTodo({
-        ...todo,
-        updatedAt: Date.now().toString(),
-        detail: contentInDetailInput
-      });
-      setState((state: State) => ({
-        ...state,
-        isTypingDetailInput: false
-      }));
-    },
-    [contentInDetailInput]
-  );
+  const [{ contentInCommentTextare }, setState] = useState(initialState);
 
   const onFocusCommentTextarea = useCallback(function() {
     setState((state: State) => ({
@@ -191,26 +135,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     <Container>
       <MainContent>
         <TodoNameSection {...todo} />
-        <section>
-          <h3>詳細説明</h3>
-          {!isTypingDetailInput ? (
-            <DetailDisplay onClick={onClickDetailDisplay}>
-              {todo.detail || "詳しい説明を追加してください。"}
-            </DetailDisplay>
-          ) : (
-            <div>
-              <DetailTextarea
-                value={contentInDetailInput}
-                placeholder="詳しい説明を追加してください..."
-                onChange={onChangeDetailTextarea}
-                autoFocus
-              />
-              <CommentSaveButton onClick={onClickDetailSaveButton}>
-                保存
-              </CommentSaveButton>
-            </div>
-          )}
-        </section>
+        <TodoDescriptionSection {...todo} />
         <section>
           <h3>コメントを追加</h3>
           <CommentTextarea
