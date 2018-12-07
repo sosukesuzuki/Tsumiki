@@ -6,11 +6,8 @@ import React, {
   KeyboardEvent,
   SyntheticEvent
 } from "react";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import InputAtom from "../../atoms/Input";
-import { Todo } from "../../../lib/type";
-import { ActionTypes } from "../../../lib/actionCreators";
 
 const Container = styled.section``;
 const Text = styled.h2`
@@ -24,16 +21,14 @@ const Input = styled(InputAtom)`
   width: 100%;
 `;
 
-type TodoNameSectionProps = Todo & {
-  updateTodo: (todo: Todo) => { type: ActionTypes };
-};
+interface Props {
+  name: string;
+  updateTodoName: (name: string) => void;
+}
 
-const TodoNameSection: React.SFC<TodoNameSectionProps> = ({
-  updateTodo,
-  ...todo
-}) => {
+const TodoNameSection: React.SFC<Props> = ({ name, updateTodoName }) => {
   const [isTyping, setIsTyping] = useState(false);
-  const [inputValue, setInputValue] = useState(todo.name);
+  const [inputValue, setInputValue] = useState(name);
 
   const nameInputEl = useRef<HTMLInputElement>(null);
 
@@ -51,10 +46,7 @@ const TodoNameSection: React.SFC<TodoNameSectionProps> = ({
     function(ev: KeyboardEvent<HTMLInputElement>) {
       if (ev.key === "Enter") {
         ev.preventDefault();
-        updateTodo({
-          ...todo,
-          name: inputValue
-        });
+        updateTodoName(inputValue);
         setIsTyping(false);
       }
     },
@@ -77,7 +69,7 @@ const TodoNameSection: React.SFC<TodoNameSectionProps> = ({
   return (
     <Container>
       {!isTyping ? (
-        <Text onClick={onClickText}>{todo.name}</Text>
+        <Text onClick={onClickText}>{name}</Text>
       ) : (
         <Input
           ref={nameInputEl}
@@ -91,17 +83,4 @@ const TodoNameSection: React.SFC<TodoNameSectionProps> = ({
   );
 };
 
-export default React.memo(
-  connect(
-    null,
-    dispatch => ({
-      updateTodo: (todo: Todo) =>
-        dispatch({
-          type: ActionTypes.UpdateTodo,
-          payload: {
-            todo
-          }
-        })
-    })
-  )(TodoNameSection)
-);
+export default React.memo(TodoNameSection);

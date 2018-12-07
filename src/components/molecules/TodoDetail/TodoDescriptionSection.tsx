@@ -2,9 +2,6 @@ import React, { useState, useCallback, ChangeEvent } from "react";
 import styled from "styled-components";
 import Textarea from "../../atoms/Textarea";
 import BoxButton from "../../atoms/BoxButton";
-import { Todo } from "../../../lib/type";
-import { connect } from "react-redux";
-import { ActionTypes } from "../../../lib/actionCreators";
 import colors from "../../../lib/colors";
 
 const Container = styled.section``;
@@ -21,13 +18,17 @@ const DescriptionTextarea = styled(Textarea)`
 `;
 const SaveButton = styled(BoxButton)``;
 
-type Props = Todo & {
-  updateTodo: (todo: Todo) => { type: ActionTypes };
-};
+interface Props {
+  detail?: string;
+  updateTodoDetail: (detail: string) => void;
+}
 
-const TodoDescriptionSection: React.SFC<Props> = ({ updateTodo, ...todo }) => {
+const TodoDescriptionSection: React.SFC<Props> = ({
+  detail,
+  updateTodoDetail
+}) => {
   const [isTyping, setIsTyping] = useState(false);
-  const [textareaValue, setTextareaValue] = useState(todo.detail);
+  const [textareaValue, setTextareaValue] = useState(detail);
 
   const onClickDescriptionContainer = useCallback(function() {
     setIsTyping(true);
@@ -44,11 +45,7 @@ const TodoDescriptionSection: React.SFC<Props> = ({ updateTodo, ...todo }) => {
 
   const onSaveDescription = useCallback(
     function() {
-      textareaValue &&
-        updateTodo({
-          ...todo,
-          detail: textareaValue
-        });
+      textareaValue && updateTodoDetail(textareaValue);
       setIsTyping(false);
     },
     [textareaValue]
@@ -59,8 +56,8 @@ const TodoDescriptionSection: React.SFC<Props> = ({ updateTodo, ...todo }) => {
       <SectionTitle>詳細説明</SectionTitle>
       {!isTyping ? (
         <DescriptionContainer onClick={onClickDescriptionContainer}>
-          {todo.detail ? (
-            <DescriptionText>{todo.detail}</DescriptionText>
+          {detail ? (
+            <DescriptionText>{detail}</DescriptionText>
           ) : (
             <DescriptionNothingText>
               詳しい説明を追加してください。
@@ -83,12 +80,4 @@ const TodoDescriptionSection: React.SFC<Props> = ({ updateTodo, ...todo }) => {
   );
 };
 
-export default React.memo(
-  connect(
-    null,
-    dispatch => ({
-      updateTodo: (todo: Todo) =>
-        dispatch({ type: ActionTypes.UpdateTodo, payload: { todo } })
-    })
-  )(TodoDescriptionSection)
-);
+export default React.memo(TodoDescriptionSection);

@@ -131,11 +131,34 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     deleteTodo({ todoId });
   }, []);
 
+  const updateTodoName = useCallback(
+    function(name: string) {
+      updateTodo({
+        ...todo,
+        name
+      });
+    },
+    [todo]
+  );
+
+  const updateTodoDetail = useCallback(
+    function(detail: string) {
+      updateTodo({
+        ...todo,
+        detail
+      });
+    },
+    [todo]
+  );
+
   return (
     <Container>
       <MainContent>
-        <TodoNameSection {...todo} />
-        <TodoDescriptionSection {...todo} />
+        <TodoNameSection name={todo.name} updateTodoName={updateTodoName} />
+        <TodoDescriptionSection
+          detail={todo.detail}
+          updateTodoDetail={updateTodoDetail}
+        />
         <section>
           <h3>コメントを追加</h3>
           <CommentTextarea
