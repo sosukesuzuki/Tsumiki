@@ -6,6 +6,7 @@ import { State } from "../../lib/reducer";
 import ColumnComponent from "../organisms/ColumnComponent";
 import { ActionTypes } from "../../lib/actionCreators";
 import { Column } from "../../lib/type";
+import BoxButton from "../atoms/BoxButton";
 
 const Container = styled.main`
   background-color: ${colors.middle};
@@ -14,22 +15,9 @@ const Container = styled.main`
   width: 100%;
   overflow-x: scroll;
 `;
-const AddListButton = styled.div`
-  background-color: ${colors.light};
+const AddListButton = styled(BoxButton)`
   height: 40px;
-  width: 200px;
-  padding: 15px;
-  cursor: pointer;
-  color: ${colors.middle};
-  transition: 0.1s;
-  border-radius: 1px;
-  margin: 0 10px;
-  &:hover {
-    height: 40px;
-    width: 200px;
-    transition: 0.1s;
-    color: ${colors.heavy};
-  }
+  width: 270px;
 `;
 
 type BoardProps = {

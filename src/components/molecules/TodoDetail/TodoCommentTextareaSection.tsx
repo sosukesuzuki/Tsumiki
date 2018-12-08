@@ -38,6 +38,7 @@ const TodoCommentTextareaSection: React.SFC<Props> = ({
       if (ev.key === "Enter") {
         ev.preventDefault();
         addCommentToParentTodo(textareaValue);
+        setTextareaValue("");
         textareaEl.current!.blur();
       }
     },

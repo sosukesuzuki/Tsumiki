@@ -46,17 +46,9 @@ const TodoNameTextarea = styled(Textarea)`
   height: 60px;
 `;
 
-type TodoComponentProps = Todo & {
-  deleteTodo: (
-    { todoId }: { todoId: string }
-  ) => {
-    type: ActionTypes;
-  };
-  updateTodo: (
-    { todo }: { todo: Todo }
-  ) => {
-    type: ActionTypes;
-  };
+type Props = Todo & {
+  deleteTodo: (todoId: string) => { type: ActionTypes };
+  updateTodo: (todo: Todo) => { type: ActionTypes };
 };
 
 interface State {
@@ -64,7 +56,7 @@ interface State {
   isTypingTodoName: boolean;
 }
 
-const TodoComponent: React.SFC<TodoComponentProps> = ({
+const TodoComponent: React.SFC<Props> = ({
   deleteTodo,
   updateTodo,
   ...todo
@@ -115,7 +107,7 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
 
   const onBlurTodoNameTextarea = useCallback(
     function() {
-      deleteTodo({ todoId: todo.id });
+      deleteTodo(todo.id);
     },
     [todo.id]
   );
@@ -125,10 +117,8 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
   ) {
     if (ev.key === "Enter") {
       updateTodo({
-        todo: {
-          ...todo,
-          name: todoNameTextareaEl.current!.value
-        }
+        ...todo,
+        name: todoNameTextareaEl.current!.value
       });
       setState((state: State) => ({
         ...state,
@@ -161,12 +151,14 @@ const TodoComponent: React.SFC<TodoComponentProps> = ({
   );
 };
 
-export default connect(
-  null,
-  dispatch => ({
-    deleteTodo: ({ todoId }: { todoId: string }) =>
-      dispatch({ type: ActionTypes.DeleteTodo, payload: { todoId } }),
-    updateTodo: ({ todo }: { todo: Todo }) =>
-      dispatch({ type: ActionTypes.UpdateTodo, payload: { todo } })
-  })
-)(TodoComponent);
+export default React.memo(
+  connect(
+    null,
+    dispatch => ({
+      deleteTodo: (todoId: string) =>
+        dispatch({ type: ActionTypes.DeleteTodo, payload: { todoId } }),
+      updateTodo: (todo: Todo) =>
+        dispatch({ type: ActionTypes.UpdateTodo, payload: { todo } })
+    })
+  )(TodoComponent)
+);

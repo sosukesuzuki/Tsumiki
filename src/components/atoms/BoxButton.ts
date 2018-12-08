@@ -9,6 +9,6 @@ export default styled.button`
   cursor: pointer;
   &:hover {
     transition: 0.1s;
-    background-color: rgba(168, 168, 168, 0.1);
+    background-color: #fafafa;
   }
 `;
