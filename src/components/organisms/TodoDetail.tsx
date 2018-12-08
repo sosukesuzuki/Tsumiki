@@ -36,10 +36,8 @@ const MainContent = styled.div`
 
 type TodoDetailProps = Todo & {
   updateTodo: (todo: Todo) => { type: ActionTypes };
-  addComment: (
-    { todoId, content }: { todoId: string; content: string }
-  ) => { type: ActionTypes };
-  deleteTodo: ({ todoId }: { todoId: string }) => { type: ActionTypes };
+  addComment: (todoId: string, content: string) => { type: ActionTypes };
+  deleteTodo: (todoId: string) => { type: ActionTypes };
   comments: TodoComment[];
 };
 
@@ -52,7 +50,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 }) => {
   const deleteThisTodo = useCallback(
     function() {
-      deleteTodo({ todoId: todo.id });
+      deleteTodo(todo.id);
     },
     [todo.id]
   );
@@ -79,10 +77,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 
   const addCommentToTodo = useCallback(
     function(content: string) {
-      addComment({
-        todoId: todo.id,
-        content
-      });
+      addComment(todo.id, content);
     },
     [todo.id]
   );
@@ -105,32 +100,34 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
   );
 };
 
-export default connect(
-  (state: RootState) => ({
-    comments: state.comments
-  }),
-  dispatch => ({
-    updateTodo: (todo: Todo) =>
-      dispatch({
-        type: ActionTypes.UpdateTodo,
-        payload: {
-          todo
-        }
-      }),
-    addComment: ({ todoId, content }: { todoId: string; content: string }) =>
-      dispatch({
-        type: ActionTypes.AddComment,
-        payload: {
-          todoId,
-          content
-        }
-      }),
-    deleteTodo: ({ todoId }: { todoId: string }) =>
-      dispatch({
-        type: ActionTypes.DeleteTodo,
-        payload: {
-          todoId
-        }
-      })
-  })
-)(TodoDetail);
+export default React.memo(
+  connect(
+    (state: RootState) => ({
+      comments: state.comments
+    }),
+    dispatch => ({
+      updateTodo: (todo: Todo) =>
+        dispatch({
+          type: ActionTypes.UpdateTodo,
+          payload: {
+            todo
+          }
+        }),
+      addComment: (todoId: string, content: string) =>
+        dispatch({
+          type: ActionTypes.AddComment,
+          payload: {
+            todoId,
+            content
+          }
+        }),
+      deleteTodo: (todoId: string) =>
+        dispatch({
+          type: ActionTypes.DeleteTodo,
+          payload: {
+            todoId
+          }
+        })
+    })
+  )(TodoDetail)
+);

@@ -4,29 +4,34 @@ import styled from "styled-components";
 import { TodoComment } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
+import IconButton from "../atoms/IconButton";
 
 const Container = styled.div`
-  border: 1px solid ${colors.heavy};
+  border: 1px solid ${colors.middle};
   display: flex;
 `;
+const CommentDeleteButton = styled(IconButton)``;
 
 type CommentComponentProps = TodoComment & {
-  deleteComment: (
-    { commentId }: { commentId: string }
-  ) => { type: ActionTypes };
+  deleteComment: (commentId: string) => { type: ActionTypes };
 };
 
 const CommentComponentProps: React.SFC<CommentComponentProps> = ({
   deleteComment,
   ...comment
 }) => {
-  const onClickDeleteCommentButton = useCallback(function() {
-    deleteComment({ commentId: comment.id });
-  }, []);
+  const onClickDeleteCommentButton = useCallback(
+    function() {
+      deleteComment(comment.id);
+    },
+    [comment.id]
+  );
   return (
     <Container>
       <p>{comment.content}</p>
-      <button onClick={onClickDeleteCommentButton}>x</button>
+      <CommentDeleteButton onClick={onClickDeleteCommentButton}>
+        &times;
+      </CommentDeleteButton>
     </Container>
   );
 };
@@ -34,7 +39,7 @@ const CommentComponentProps: React.SFC<CommentComponentProps> = ({
 export default connect(
   null,
   dispatch => ({
-    deleteComment: ({ commentId }: { commentId: string }) =>
+    deleteComment: (commentId: string) =>
       dispatch({ type: ActionTypes.DeleteComment, payload: { commentId } })
   })
 )(CommentComponentProps);
