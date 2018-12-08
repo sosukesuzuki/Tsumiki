@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { TodoComment } from "../../../lib/type";
-import CommentComponent from "./CommentComponent";
+import CommentComponent from "../CommentComponent";
 
 const Container = styled.section``;
 const SectionTitle = styled.h3``;

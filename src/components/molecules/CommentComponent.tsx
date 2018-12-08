@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { TodoComment } from "../../../lib/type";
-import colors from "../../../lib/colors";
-import { ActionTypes } from "../../../lib/actionCreators";
+import { TodoComment } from "../../lib/type";
+import colors from "../../lib/colors";
+import { ActionTypes } from "../../lib/actionCreators";
 
 const Container = styled.div`
   border: 1px solid ${colors.heavy};
