@@ -11,9 +11,9 @@ import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
 import CommentComponent from "./CommentComponent";
-import Textarea from "../atoms/Textarea";
 import TodoNameSection from "../molecules/TodoDetail/TodoNameSection";
 import TodoDescriptionSection from "../molecules/TodoDetail/TodoDescriptionSection";
+import TodoCommentTextareaSection from "../molecules/TodoDetail/TodoCommentTextareaSection";
 
 const Container = styled.article`
   position: absolute;
@@ -37,16 +37,6 @@ const Container = styled.article`
 const MainContent = styled.div`
   width: 100%;
 `;
-const CommentTextarea = styled(Textarea)`
-  width: 100%;
-  height: 60px;
-  box-shadow: none;
-  box-shadow: 0 0 0 1px ${colors.middle};
-  &:focus {
-    border: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
-  }
-`;
 
 type TodoDetailProps = Todo & {
   updateTodo: (todo: Todo) => { type: ActionTypes };
@@ -57,15 +47,6 @@ type TodoDetailProps = Todo & {
   comments: TodoComment[];
 };
 
-interface State {
-  isTypingDetailInput: boolean;
-  contentInDetailInput: string | undefined;
-  isTypingNameInput: boolean;
-  contentInNameInput: string | undefined;
-  isTypingCommentTextarea: boolean;
-  contentInCommentTextare: string;
-}
-
 const TodoDetail: React.SFC<TodoDetailProps> = ({
   updateTodo,
   addComment,
@@ -73,60 +54,6 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
   comments,
   ...todo
 }) => {
-  const initialState: State = {
-    isTypingDetailInput: false,
-    contentInDetailInput: todo.detail,
-    isTypingNameInput: false,
-    contentInNameInput: todo.name,
-    isTypingCommentTextarea: false,
-    contentInCommentTextare: ""
-  };
-  const [{ contentInCommentTextare }, setState] = useState(initialState);
-
-  const onFocusCommentTextarea = useCallback(function() {
-    setState((state: State) => ({
-      ...state,
-      isTypingCommentTextarea: true
-    }));
-  }, []);
-
-  const onBlurCommentTextarea = useCallback(function() {
-    setState((state: State) => ({
-      ...state,
-      isTypingCommentTextarea: false
-    }));
-  }, []);
-
-  const onChangeCommentTextarea = useCallback(function(
-    ev: ChangeEvent<HTMLTextAreaElement>
-  ) {
-    ev.persist();
-    const value = (ev.target as any).value;
-    setState((state: State) => ({
-      ...state,
-      contentInCommentTextare: value
-    }));
-  },
-  []);
-
-  const onKeyPressCommentTextarea = useCallback(
-    function(ev: KeyboardEvent<HTMLTextAreaElement>) {
-      if (ev.key === "Enter") {
-        ev.preventDefault();
-        addComment({
-          todoId: todo.id,
-          content: contentInCommentTextare
-        });
-        setState((state: State) => ({
-          ...state,
-          contentInCommentTextare: "",
-          isTypingCommentTextarea: false
-        }));
-      }
-    },
-    [contentInCommentTextare]
-  );
-
   const onClickDeleteTodoButton = useCallback(function(todoId: string) {
     deleteTodo({ todoId });
   }, []);
@@ -151,6 +78,16 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
     [todo]
   );
 
+  const addCommentToTodo = useCallback(
+    function(content: string) {
+      addComment({
+        todoId: todo.id,
+        content
+      });
+    },
+    [todo.id]
+  );
+
   return (
     <Container>
       <MainContent>
@@ -159,17 +96,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
           detail={todo.detail}
           updateTodoDetail={updateTodoDetail}
         />
-        <section>
-          <h3>コメントを追加</h3>
-          <CommentTextarea
-            placeholder="コメントを入力してください。"
-            onFocus={onFocusCommentTextarea}
-            onBlur={onBlurCommentTextarea}
-            value={contentInCommentTextare}
-            onChange={onChangeCommentTextarea}
-            onKeyPress={onKeyPressCommentTextarea}
-          />
-        </section>
+        <TodoCommentTextareaSection addCommentToParentTodo={addCommentToTodo} />
         <section>
           <h3>コメントログ</h3>
           {comments
