@@ -107,4 +107,4 @@ const HeaderSection: React.SFC<Props> = ({
   );
 };
 
-export default HeaderSection;
+export default React.memo(HeaderSection);

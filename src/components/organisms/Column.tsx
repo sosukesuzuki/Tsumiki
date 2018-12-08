@@ -63,8 +63,8 @@ const ColumnComponent: React.SFC<Props> = ({
   }, []);
 
   const relatedTodos = useMemo(
-    () => todos.filter(todo => todo.id === column.id),
-    [todos]
+    () => todos.filter(todo => todo.columnId === column.id),
+    [todos, column.id]
   );
 
   return (
@@ -76,11 +76,9 @@ const ColumnComponent: React.SFC<Props> = ({
         updateColumnName={updateColumnName}
       />
       <Columns>
-        {todos
-          .filter(todo => todo.columnId === column.id)
-          .map(todo => (
-            <TodoComponent {...todo} key={todo.id} />
-          ))}
+        {relatedTodos.map(todo => (
+          <TodoComponent {...todo} key={todo.id} />
+        ))}
       </Columns>
       <AddCardButton onClick={onClickAddTodoButton}>
         + さらにカードを追加
