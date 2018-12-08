@@ -1,19 +1,14 @@
-import React, {
-  useState,
-  useCallback,
-  KeyboardEvent,
-  ChangeEvent
-} from "react";
+import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Todo, TodoComment } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
-import CommentComponent from "./CommentComponent";
 import TodoNameSection from "../molecules/TodoDetail/TodoNameSection";
 import TodoDescriptionSection from "../molecules/TodoDetail/TodoDescriptionSection";
 import TodoCommentTextareaSection from "../molecules/TodoDetail/TodoCommentTextareaSection";
+import CommentLogsSection from "../molecules/TodoDetail/CommentLogsSection";
 
 const Container = styled.article`
   position: absolute;
@@ -97,14 +92,9 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
           updateTodoDetail={updateTodoDetail}
         />
         <TodoCommentTextareaSection addCommentToParentTodo={addCommentToTodo} />
-        <section>
-          <h3>コメントログ</h3>
-          {comments
-            .filter(comment => comment.todoId === todo.id)
-            .map(comment => (
-              <CommentComponent key={comment.id} {...comment} />
-            ))}
-        </section>
+        <CommentLogsSection
+          comments={comments.filter(comment => comment.todoId === todo.id)}
+        />
       </MainContent>
       <div>
         <button onClick={() => onClickDeleteTodoButton(todo.id)}>
