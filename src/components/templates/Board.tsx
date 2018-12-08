@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import colors from "../../lib/colors";
 import { State } from "../../lib/reducer";
-import ColumnComponent from "../organisms/ColumnComponent";
+import ColumnComponent from "../organisms/Column";
 import { ActionTypes } from "../../lib/actionCreators";
 import { Column } from "../../lib/type";
 import BoxButton from "../atoms/BoxButton";
@@ -20,12 +20,12 @@ const AddListButton = styled(BoxButton)`
   width: 270px;
 `;
 
-type BoardProps = {
+interface Props {
   columns: Column[];
   addColumn: () => { type: ActionTypes };
-};
+}
 
-const Board: React.SFC<BoardProps> = ({ columns, addColumn }) => {
+const Board: React.SFC<Props> = ({ columns, addColumn }) => {
   return (
     <Container>
       {columns.map(column => (

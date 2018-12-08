@@ -1,11 +1,5 @@
 import actionCreatorFactory from "typescript-fsa";
-import {
-  Column,
-  Todo,
-  TodoComment,
-  OnlyIdRequiredColumn,
-  OnlyIdRequiredTodo
-} from "./type";
+import { Column, Todo, TodoComment } from "./type";
 
 const actionCreator = actionCreatorFactory();
 
@@ -42,10 +36,9 @@ export const deleteColumn = actionCreator.async<{ column: Column }, null>(
   ActionTypes.DeleteColumn
 );
 
-export const updateColumn = actionCreator.async<
-  { column: OnlyIdRequiredColumn },
-  null
->(ActionTypes.UpdateColumn);
+export const updateColumn = actionCreator.async<{ column: Column }, null>(
+  ActionTypes.UpdateColumn
+);
 
 export const setColumn = actionCreator<{ column: Column }>(
   ActionTypes.SetColumn
@@ -59,10 +52,9 @@ export const deleteTodo = actionCreator.async<{ todo: Todo }, null>(
   ActionTypes.DeleteTodo
 );
 
-export const updateTodo = actionCreator.async<
-  { todo: OnlyIdRequiredTodo },
-  null
->(ActionTypes.UpdateTodo);
+export const updateTodo = actionCreator.async<{ todo: Todo }, null>(
+  ActionTypes.UpdateTodo
+);
 
 export const setTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetTodo);
 

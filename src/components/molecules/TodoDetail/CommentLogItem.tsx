@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { TodoComment } from "../../lib/type";
-import colors from "../../lib/colors";
-import { ActionTypes } from "../../lib/actionCreators";
-import IconButton from "../atoms/IconButton";
+import { TodoComment } from "../../../lib/type";
+import colors from "../../../lib/colors";
+import { ActionTypes } from "../../../lib/actionCreators";
+import IconButton from "../../atoms/IconButton";
 
 const Container = styled.div`
   border: 1px solid ${colors.middle};

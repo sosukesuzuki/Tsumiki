@@ -8,11 +8,11 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Column, Todo, OnlyIdRequiredColumn } from "../../lib/type";
+import { Column, Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
-import TodoComponent from "./TodoComponent";
+import TodoComponent from "./TodoItem";
 import Input from "../atoms/Input";
 import BoxButton from "../atoms/BoxButton";
 import IconButton from "../atoms/IconButton";
@@ -51,23 +51,11 @@ const Columns = styled.div`
   margin-top: 15px;
 `;
 
-type ColumnComponentProps = Column & {
+type Props = Column & {
   todos: Todo[];
-  updateColumn: (
-    column: OnlyIdRequiredColumn
-  ) => {
-    type: ActionTypes;
-  };
-  addTodo: (
-    { columnId }: { columnId: string }
-  ) => {
-    type: ActionTypes;
-  };
-  deleteColumn: (
-    { columnId }: { columnId: string }
-  ) => {
-    type: ActionTypes;
-  };
+  updateColumn: (column: Column) => { type: ActionTypes };
+  addTodo: (columnId: string) => { type: ActionTypes };
+  deleteColumn: (columnId: string) => { type: ActionTypes };
 };
 
 interface State {
@@ -75,17 +63,16 @@ interface State {
   contentInColumnNameInput?: string;
 }
 
-const ColumnComponent: React.SFC<ColumnComponentProps> = ({
-  name,
-  id,
+const ColumnComponent: React.SFC<Props> = ({
+  todos,
   updateColumn,
   addTodo,
-  todos,
-  deleteColumn
+  deleteColumn,
+  ...column
 }) => {
   const initialState: State = {
     isTypingColumnName: false,
-    contentInColumnNameInput: name
+    contentInColumnNameInput: column.name
   };
 
   const [state, setState] = useState(initialState);
@@ -99,7 +86,7 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
   });
 
   useEffect(() => {
-    if (name === "")
+    if (column.name === "")
       setState({
         ...state,
         isTypingColumnName: true
@@ -122,8 +109,8 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     function(ev: KeyboardEvent<HTMLInputElement>) {
       if (ev.key === "Enter") {
         updateColumn({
-          name: state.contentInColumnNameInput,
-          id
+          ...column,
+          name: state.contentInColumnNameInput!
         });
         setState((state: State) => ({
           ...state,
@@ -148,13 +135,13 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
 
   const onBlurColumnNameInput = useCallback(
     function() {
-      const relatedTodos = todos.filter(todo => todo.columnId === id);
+      const relatedTodos = todos.filter(todo => todo.columnId === column.id);
       if (
         relatedTodos.length === 0 &&
         contentInColumnNameInput === "" &&
-        name === ""
+        column.name === ""
       ) {
-        deleteColumn({ columnId: id });
+        deleteColumn(column.id);
       }
       setState((state: State) => ({
         ...state,
@@ -162,17 +149,15 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
         isTypingColumnName: false
       }));
     },
-    [state.contentInColumnNameInput, state.isTypingColumnName, name]
+    [state.contentInColumnNameInput, state.isTypingColumnName, column.name]
   );
 
   const onClickAddTodoButton = useCallback(function(columnId: string) {
-    addTodo({ columnId });
+    addTodo(columnId);
   }, []);
 
   const onClickClumnDeleteButton = useCallback(function(columnId: string) {
-    deleteColumn({
-      columnId
-    });
+    deleteColumn(columnId);
   }, []);
 
   const { isTypingColumnName, contentInColumnNameInput } = state;
@@ -180,7 +165,7 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
     <Container>
       <Header>
         {!isTypingColumnName ? (
-          <h3 onClick={onClickColumnName}>{name}</h3>
+          <h3 onClick={onClickColumnName}>{column.name}</h3>
         ) : (
           <ColumnTitleInput
             type="text"
@@ -191,18 +176,18 @@ const ColumnComponent: React.SFC<ColumnComponentProps> = ({
             ref={columnInputEl}
           />
         )}
-        <DeleteColumnButton onClick={() => onClickClumnDeleteButton(id)}>
+        <DeleteColumnButton onClick={() => onClickClumnDeleteButton(column.id)}>
           <span>&times;</span>
         </DeleteColumnButton>
       </Header>
       <Columns>
         {todos
-          .filter(todo => todo.columnId === id)
+          .filter(todo => todo.columnId === column.id)
           .map(todo => (
             <TodoComponent {...todo} key={todo.id} />
           ))}
       </Columns>
-      <AddCardButton onClick={() => onClickAddTodoButton(id)}>
+      <AddCardButton onClick={() => onClickAddTodoButton(column.id)}>
         + さらにカードを追加
       </AddCardButton>
     </Container>
@@ -214,11 +199,11 @@ export default connect(
     todos: state.todos
   }),
   dispatch => ({
-    updateColumn: (column: OnlyIdRequiredColumn) =>
+    updateColumn: (column: Column) =>
       dispatch({ type: ActionTypes.UpdateColumn, payload: { column } }),
-    addTodo: ({ columnId }: { columnId: string }) =>
+    addTodo: (columnId: string) =>
       dispatch({ type: ActionTypes.AddTodo, payload: { columnId } }),
-    deleteColumn: ({ columnId }: { columnId: string }) =>
+    deleteColumn: (columnId: string) =>
       dispatch({ type: ActionTypes.DeleteColumn, payload: { columnId } })
   })
 )(ColumnComponent);

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { TodoComment } from "../../../lib/type";
-import CommentComponent from "../CommentComponent";
+import CommentLogItem from "./CommentLogItem";
 
 const Container = styled.section``;
 const SectionTitle = styled.h3``;
@@ -15,7 +15,7 @@ const CommentLogsSection: React.SFC<Props> = ({ comments }) => {
     <Container>
       <SectionTitle>コメントログ</SectionTitle>
       {comments.map(comment => (
-        <CommentComponent key={comment.id} {...comment} />
+        <CommentLogItem key={comment.id} {...comment} />
       ))}
     </Container>
   );
