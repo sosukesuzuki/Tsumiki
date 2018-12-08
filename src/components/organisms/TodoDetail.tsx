@@ -9,6 +9,7 @@ import TodoNameSection from "../molecules/TodoDetail/TodoNameSection";
 import TodoDescriptionSection from "../molecules/TodoDetail/TodoDescriptionSection";
 import TodoCommentTextareaSection from "../molecules/TodoDetail/TodoCommentTextareaSection";
 import CommentLogsSection from "../molecules/TodoDetail/CommentLogsSection";
+import SideNavigation from "../molecules/TodoDetail/SideNavigation";
 
 const Container = styled.article`
   position: absolute;
@@ -49,9 +50,12 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
   comments,
   ...todo
 }) => {
-  const onClickDeleteTodoButton = useCallback(function(todoId: string) {
-    deleteTodo({ todoId });
-  }, []);
+  const deleteThisTodo = useCallback(
+    function() {
+      deleteTodo({ todoId: todo.id });
+    },
+    [todo.id]
+  );
 
   const updateTodoName = useCallback(
     function(name: string) {
@@ -96,11 +100,7 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
           comments={comments.filter(comment => comment.todoId === todo.id)}
         />
       </MainContent>
-      <div>
-        <button onClick={() => onClickDeleteTodoButton(todo.id)}>
-          このカードを削除する。
-        </button>
-      </div>
+      <SideNavigation deleteTodo={deleteThisTodo} />
     </Container>
   );
 };
