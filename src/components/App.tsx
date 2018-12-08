@@ -12,11 +12,11 @@ const Container = styled.div`
   overflow-y: hidden;
 `;
 
-interface AppProps {
+interface Props {
   fetchBoardData: () => { type: ActionTypes };
 }
 
-const App: React.SFC<AppProps> = ({ fetchBoardData }) => {
+const App: React.SFC<Props> = ({ fetchBoardData }) => {
   useEffect(() => {
     fetchBoardData();
   }, []);
