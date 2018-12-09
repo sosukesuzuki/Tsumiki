@@ -2,11 +2,13 @@ import { SagaIterator } from "redux-saga";
 import { fork, call, put, take, select, all } from "redux-saga/effects";
 import {
   setBoardData,
-  setColumn,
+  setNewColumn,
   ActionTypes,
-  setTodo,
-  setComment,
-  fetchBoardData
+  setNewTodo,
+  setNewComment,
+  fetchBoardData,
+  setUpdatedColumn,
+  setUpdatedTodo
 } from "./actionCreators";
 import * as DB from "./db";
 import {
@@ -15,7 +17,7 @@ import {
   generateComment
 } from "./ItemGenerators";
 import { State } from "./reducer";
-import { Todo, TodoComment } from "./type";
+import { Todo, TodoComment, UpdateDiffColumn, UpdateDiffTodo } from "./type";
 import _ from "lodash";
 
 function* fetchBoardDataSaga(): SagaIterator {
@@ -31,7 +33,7 @@ function* addColumnSaga(): SagaIterator {
     yield take(ActionTypes.AddColumn);
     const column = generateColumn({ name: "" });
     yield call(DB.addColumn, column);
-    yield put(setColumn({ column }));
+    yield put(setNewColumn({ column }));
   }
 }
 
@@ -62,9 +64,11 @@ function* deleteColumnSaga(): SagaIterator {
 function* updateColumnSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.UpdateColumn);
-    const { column } = payload;
-    yield call(DB.updateColumn, column);
-    yield put(setColumn({ column }));
+    const { id, diff }: { id: string; diff: UpdateDiffColumn } = payload;
+    yield put(setUpdatedColumn({ id, diff }));
+    const columns = yield select((state: State) => state.columns);
+    const updatedColumn = _.find(columns, ["id", id]);
+    yield call(DB.updateColumn, updatedColumn);
   }
 }
 
@@ -74,16 +78,18 @@ function* addTodoSaga(): SagaIterator {
     const { columnId } = payload;
     const todo = generateTodo({ name: "", columnId });
     yield call(DB.addTodo, todo);
-    yield put(setTodo({ todo }));
+    yield put(setNewTodo({ todo }));
   }
 }
 
 function* updateTodoSaga(): SagaIterator {
   while (true) {
     const { payload } = yield take(ActionTypes.UpdateTodo);
-    const { todo } = payload;
-    yield call(DB.updateTodo, todo);
-    yield put(setTodo({ todo }));
+    const { id, diff }: { id: string; diff: UpdateDiffTodo } = payload;
+    yield put(setUpdatedTodo({ id, diff }));
+    const todos = yield select((state: State) => state.todos);
+    const updatedTodo = _.find(todos, ["id", id]);
+    yield call(DB.updateTodo, updatedTodo);
   }
 }
 
@@ -115,7 +121,7 @@ function* addCommentSaga(): SagaIterator {
     const { todoId, content } = payload;
     const comment = generateComment({ content, todoId });
     yield call(DB.addComment, comment);
-    yield put(setComment({ comment }));
+    yield put(setNewComment({ comment }));
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Column, Todo } from "../../lib/type";
+import { Column, Todo, UpdateDiffColumn } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
@@ -29,7 +29,7 @@ const Todos = styled.div`
 
 type Props = Column & {
   todos: Todo[];
-  updateColumn: (column: Column) => { type: ActionTypes };
+  updateColumn: (id: string, diff: UpdateDiffColumn) => { type: ActionTypes };
   addTodo: (columnId: string) => { type: ActionTypes };
   deleteColumn: (columnId: string) => { type: ActionTypes };
 };
@@ -50,12 +50,11 @@ const ColumnComponent: React.SFC<Props> = ({
 
   const updateColumnName = useCallback(
     function(name: string) {
-      updateColumn({
-        ...column,
+      updateColumn(column.id, {
         name
       });
     },
-    [column]
+    [column.id]
   );
 
   const deleteOwn = useCallback(function() {
@@ -92,8 +91,8 @@ export default connect(
     todos: state.todos
   }),
   dispatch => ({
-    updateColumn: (column: Column) =>
-      dispatch({ type: ActionTypes.UpdateColumn, payload: { column } }),
+    updateColumn: (id: string, diff: UpdateDiffColumn) =>
+      dispatch({ type: ActionTypes.UpdateColumn, payload: { id, diff } }),
     addTodo: (columnId: string) =>
       dispatch({ type: ActionTypes.AddTodo, payload: { columnId } }),
     deleteColumn: (columnId: string) =>

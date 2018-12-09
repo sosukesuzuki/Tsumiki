@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo } from "../../../lib/type";
+import { Todo, UpdateDiffTodo } from "../../../lib/type";
 import colors from "../../../lib/colors";
 import TodoDetail from "../../organisms/TodoDetail";
 import { ActionTypes } from "../../../lib/actionCreators";
@@ -48,7 +48,7 @@ const TodoNameTextarea = styled(Textarea)`
 
 type Props = Todo & {
   deleteTodo: (todoId: string) => { type: ActionTypes };
-  updateTodo: (todo: Todo) => { type: ActionTypes };
+  updateTodo: (id: string, diff: UpdateDiffTodo) => { type: ActionTypes };
 };
 
 interface State {
@@ -112,21 +112,20 @@ const TodoComponent: React.SFC<Props> = ({
     [todo.id]
   );
 
-  const onKeyPressTodoNameTextarea = useCallback(function(
-    ev: KeyboardEvent<HTMLTextAreaElement>
-  ) {
-    if (ev.key === "Enter") {
-      updateTodo({
-        ...todo,
-        name: todoNameTextareaEl.current!.value
-      });
-      setState((state: State) => ({
-        ...state,
-        isTypingTodoName: false
-      }));
-    }
-  },
-  []);
+  const onKeyPressTodoNameTextarea = useCallback(
+    function(ev: KeyboardEvent<HTMLTextAreaElement>) {
+      if (ev.key === "Enter") {
+        updateTodo(todo.id, {
+          name: todoNameTextareaEl.current!.value
+        });
+        setState((state: State) => ({
+          ...state,
+          isTypingTodoName: false
+        }));
+      }
+    },
+    [todo.id]
+  );
 
   return (
     <>
@@ -157,8 +156,8 @@ export default React.memo(
     dispatch => ({
       deleteTodo: (todoId: string) =>
         dispatch({ type: ActionTypes.DeleteTodo, payload: { todoId } }),
-      updateTodo: (todo: Todo) =>
-        dispatch({ type: ActionTypes.UpdateTodo, payload: { todo } })
+      updateTodo: (id: string, diff: UpdateDiffTodo) =>
+        dispatch({ type: ActionTypes.UpdateTodo, payload: { id, diff } })
     })
   )(TodoComponent)
 );

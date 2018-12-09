@@ -29,10 +29,8 @@ export interface Column {
   updatedAt: string;
 }
 
-type OnlyIdRequired<Item extends { id: string }> = Partial<Omit<Item, "id">> & {
-  id: string;
-};
+type OtherThanId<Item extends { id: string }> = Omit<Item, "id">;
 
-export type OnlyIdRequiredColumn = OnlyIdRequired<Column>;
-export type OnlyIdRequiredTodo = OnlyIdRequired<Todo>;
-export type OnlyIdRequiredComment = OnlyIdRequired<TodoComment>;
+export type UpdateDiffColumn = Partial<OtherThanId<Column>>;
+export type UpdateDiffTodo = Partial<OtherThanId<Todo>>;
+export type UpdateDiffComment = Partial<OtherThanId<TodoComment>>;

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo, TodoComment } from "../../lib/type";
+import { Todo, TodoComment, UpdateDiffTodo } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
@@ -35,7 +35,7 @@ const MainContent = styled.div`
 `;
 
 type TodoDetailProps = Todo & {
-  updateTodo: (todo: Todo) => { type: ActionTypes };
+  updateTodo: (id: string, diff: UpdateDiffTodo) => { type: ActionTypes };
   addComment: (todoId: string, content: string) => { type: ActionTypes };
   deleteTodo: (todoId: string) => { type: ActionTypes };
   comments: TodoComment[];
@@ -57,22 +57,20 @@ const TodoDetail: React.SFC<TodoDetailProps> = ({
 
   const updateTodoName = useCallback(
     function(name: string) {
-      updateTodo({
-        ...todo,
+      updateTodo(todo.id, {
         name
       });
     },
-    [todo]
+    [todo.id]
   );
 
   const updateTodoDetail = useCallback(
     function(detail: string) {
-      updateTodo({
-        ...todo,
+      updateTodo(todo.id, {
         detail
       });
     },
-    [todo]
+    [todo.id]
   );
 
   const addCommentToTodo = useCallback(
@@ -106,11 +104,12 @@ export default React.memo(
       comments: state.comments
     }),
     dispatch => ({
-      updateTodo: (todo: Todo) =>
+      updateTodo: (id: string, diff: UpdateDiffTodo) =>
         dispatch({
           type: ActionTypes.UpdateTodo,
           payload: {
-            todo
+            id,
+            diff
           }
         }),
       addComment: (todoId: string, content: string) =>

@@ -1,5 +1,12 @@
 import actionCreatorFactory from "typescript-fsa";
-import { Column, Todo, TodoComment } from "./type";
+import {
+  Column,
+  Todo,
+  TodoComment,
+  UpdateDiffColumn,
+  UpdateDiffTodo,
+  UpdateDiffComment
+} from "./type";
 
 const actionCreator = actionCreatorFactory();
 
@@ -9,14 +16,17 @@ export enum ActionTypes {
   AddColumn = "ADD_COLUMN",
   DeleteColumn = "DELETE_COLUMN",
   UpdateColumn = "UPDATE_COLUMN",
-  SetColumn = "SET_COLUMN",
+  SetNewColumn = "SET_NEW_COLUMN",
+  SetUpdatedColumn = "SET_UPDATED_COLUMN",
   AddTodo = "ADD_TODO",
   DeleteTodo = "DELETE_TODO",
   UpdateTodo = "UPDATE_TODO",
-  SetTodo = "SET_TODO",
+  SetNewTodo = "SET_NEW_TODO",
+  SetUpdatedTodo = "SET_UPDATED_TODO",
   AddComment = "ADD_COMMENT",
   DeleteComment = "DELETE_COMMENT",
-  SetComment = "SET_COMMENT"
+  SetNewComment = "SET_NEW_COMMENT",
+  SetUpdatedComment = "SET_UPDATED_COMMENT"
 }
 
 export const fetchBoardData = actionCreator.async<
@@ -40,9 +50,14 @@ export const updateColumn = actionCreator.async<{ column: Column }, null>(
   ActionTypes.UpdateColumn
 );
 
-export const setColumn = actionCreator<{ column: Column }>(
-  ActionTypes.SetColumn
+export const setNewColumn = actionCreator<{ column: Column }>(
+  ActionTypes.SetNewColumn
 );
+
+export const setUpdatedColumn = actionCreator<{
+  id: string;
+  diff: UpdateDiffColumn;
+}>(ActionTypes.SetUpdatedColumn);
 
 export const addTodo = actionCreator.async<{ columnId: string }, null>(
   ActionTypes.AddTodo
@@ -56,7 +71,12 @@ export const updateTodo = actionCreator.async<{ todo: Todo }, null>(
   ActionTypes.UpdateTodo
 );
 
-export const setTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetTodo);
+export const setNewTodo = actionCreator<{ todo: Todo }>(ActionTypes.SetNewTodo);
+
+export const setUpdatedTodo = actionCreator<{
+  id: string;
+  diff: UpdateDiffTodo;
+}>(ActionTypes.SetUpdatedTodo);
 
 export const addComment = actionCreator.async<
   { todoId: string; content: string },
@@ -67,6 +87,11 @@ export const deleteComment = actionCreator.async<{ comment: Comment }, null>(
   ActionTypes.DeleteComment
 );
 
-export const setComment = actionCreator<{
+export const setNewComment = actionCreator<{
   comment: TodoComment;
-}>(ActionTypes.SetComment);
+}>(ActionTypes.SetNewComment);
+
+export const setUpdatedComment = actionCreator<{
+  id: string;
+  diff: UpdateDiffComment;
+}>(ActionTypes.SetUpdatedComment);
