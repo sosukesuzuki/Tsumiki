@@ -7,11 +7,11 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo } from "../../lib/type";
-import colors from "../../lib/colors";
-import TodoDetail from "./TodoDetail";
-import { ActionTypes } from "../../lib/actionCreators";
-import Textarea from "../atoms/Textarea";
+import { Todo } from "../../../lib/type";
+import colors from "../../../lib/colors";
+import TodoDetail from "../../organisms/TodoDetail";
+import { ActionTypes } from "../../../lib/actionCreators";
+import Textarea from "../../atoms/Textarea";
 
 const Container = styled.div`
   margin: 5px 0;

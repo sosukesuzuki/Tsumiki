@@ -5,7 +5,7 @@ import { Column, Todo } from "../../lib/type";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";
-import TodoComponent from "./TodoItem";
+import TodoComponent from "../molecules/Column/TodoItem";
 import BoxButton from "../atoms/BoxButton";
 import HeaderSection from "../molecules/Column/HeaderSection";
 
@@ -23,7 +23,7 @@ const AddCardButton = styled(BoxButton)`
   width: 100%;
   margin-top: 10px;
 `;
-const Columns = styled.div`
+const Todos = styled.div`
   margin-top: 15px;
 `;
 
@@ -75,11 +75,11 @@ const ColumnComponent: React.SFC<Props> = ({
         deleteThisColumn={deleteOwn}
         updateColumnName={updateColumnName}
       />
-      <Columns>
+      <Todos>
         {relatedTodos.map(todo => (
           <TodoComponent {...todo} key={todo.id} />
         ))}
-      </Columns>
+      </Todos>
       <AddCardButton onClick={onClickAddTodoButton}>
         + さらにカードを追加
       </AddCardButton>
