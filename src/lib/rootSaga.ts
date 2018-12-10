@@ -8,7 +8,8 @@ import {
   setNewComment,
   fetchBoardData,
   setUpdatedColumn,
-  setUpdatedTodo
+  setUpdatedTodo,
+  setUpdatedComment
 } from "./actionCreators";
 import * as DB from "./db";
 import {
@@ -17,7 +18,13 @@ import {
   generateComment
 } from "./ItemGenerators";
 import { State } from "./reducer";
-import { Todo, TodoComment, UpdateDiffColumn, UpdateDiffTodo } from "./type";
+import {
+  Todo,
+  TodoComment,
+  UpdateDiffColumn,
+  UpdateDiffTodo,
+  UpdateDiffComment
+} from "./type";
 import _ from "lodash";
 
 function* fetchBoardDataSaga(): SagaIterator {
@@ -134,6 +141,17 @@ function* deleteCommentSaga(): SagaIterator {
   }
 }
 
+function* updateCommentSaga(): SagaIterator {
+  while (true) {
+    const { payload } = yield take(ActionTypes.UpdateComment);
+    const { id, diff }: { id: string; diff: UpdateDiffComment } = payload;
+    yield put(setUpdatedComment({ id, diff }));
+    const comments = yield select((state: State) => state.comments);
+    const updatedComment = _.find(comments, ["id", id]);
+    yield call(DB.updateComment, updatedComment);
+  }
+}
+
 export default function*(): SagaIterator {
   yield fork(fetchBoardDataSaga);
   yield fork(addColumnSaga);
@@ -144,4 +162,5 @@ export default function*(): SagaIterator {
   yield fork(deleteColumnSaga);
   yield fork(deleteTodoSaga);
   yield fork(deleteCommentSaga);
+  yield fork(updateCommentSaga);
 }

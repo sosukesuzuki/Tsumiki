@@ -25,6 +25,7 @@ export enum ActionTypes {
   SetUpdatedTodo = "SET_UPDATED_TODO",
   AddComment = "ADD_COMMENT",
   DeleteComment = "DELETE_COMMENT",
+  UpdateComment = "UPDATE_COMMENT",
   SetNewComment = "SET_NEW_COMMENT",
   SetUpdatedComment = "SET_UPDATED_COMMENT"
 }

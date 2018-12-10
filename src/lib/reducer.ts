@@ -6,7 +6,8 @@ import {
   setUpdatedColumn,
   setNewTodo,
   setNewComment,
-  setUpdatedTodo
+  setUpdatedTodo,
+  setUpdatedComment
 } from "./actionCreators";
 import _ from "lodash";
 
@@ -78,6 +79,23 @@ const reducer = reducerWithInitialState(initialState)
   .case(setNewComment, (state: State, { comment }) => ({
     ...state,
     comments: [...state.comments, comment]
-  }));
+  }))
+  .case(setUpdatedComment, (state: State, { id, diff }) => {
+    const { comments } = state;
+    const newComments = comments.map(comment => {
+      if (comment.id === id) {
+        const newComment = comment;
+        if (diff.content != null) newComment.content = diff.content;
+        if (diff.todoId != null) newComment.todoId = diff.todoId;
+        if (diff.updatedAt != null) newComment.updatedAt = diff.updatedAt;
+        return newComment;
+      }
+      return comment;
+    });
+    return {
+      ...state,
+      comments: newComments
+    };
+  });
 
 export default reducer;
