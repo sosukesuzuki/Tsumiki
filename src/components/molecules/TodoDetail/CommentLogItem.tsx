@@ -41,7 +41,7 @@ const CommentComponentProps: React.SFC<CommentComponentProps> = ({
     if (inputEl && inputEl.current) {
       inputEl.current.focus();
     }
-  }, []);
+  });
 
   const onChangeInput = useCallback(function(
     ev: SyntheticEvent<HTMLInputElement>
