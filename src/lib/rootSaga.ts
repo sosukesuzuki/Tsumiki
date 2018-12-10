@@ -16,7 +16,7 @@ import {
   generateColumn,
   generateTodo,
   generateComment
-} from "./ItemGenerators";
+} from "./itemGenerators";
 import { State } from "./reducer";
 import {
   Todo,
@@ -24,7 +24,7 @@ import {
   UpdateDiffColumn,
   UpdateDiffTodo,
   UpdateDiffComment
-} from "./type";
+} from "./types";
 import _ from "lodash";
 
 function* fetchBoardDataSaga(): SagaIterator {

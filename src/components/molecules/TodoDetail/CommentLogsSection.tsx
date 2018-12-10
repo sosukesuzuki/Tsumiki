@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { TodoComment } from "../../../lib/type";
+import { TodoComment } from "../../../lib/types";
 import CommentLogItem from "./CommentLogItem";
 
 const Container = styled.section``;

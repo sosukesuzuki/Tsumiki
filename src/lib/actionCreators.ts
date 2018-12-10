@@ -6,7 +6,7 @@ import {
   UpdateDiffColumn,
   UpdateDiffTodo,
   UpdateDiffComment
-} from "./type";
+} from "./types";
 
 const actionCreator = actionCreatorFactory();
 

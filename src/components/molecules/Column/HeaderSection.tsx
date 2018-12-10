@@ -9,7 +9,7 @@ import React, {
 import styled from "styled-components";
 import Input from "../../atoms/Input";
 import IconButton from "../../atoms/IconButton";
-import { Todo } from "../../../lib/type";
+import { Todo } from "../../../lib/types";
 
 const Container = styled.section`
   display: flex;

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo, UpdateDiffTodo } from "../../../lib/type";
+import { Todo, UpdateDiffTodo } from "../../../lib/types";
 import colors from "../../../lib/colors";
 import TodoDetail from "../../organisms/TodoDetail";
 import { ActionTypes } from "../../../lib/actionCreators";

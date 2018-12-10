@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Column, Todo, UpdateDiffColumn } from "../../lib/type";
+import { Column, Todo, UpdateDiffColumn } from "../../lib/types";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";

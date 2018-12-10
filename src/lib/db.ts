@@ -1,5 +1,5 @@
 import Dexie from "dexie";
-import { Column, Todo, TodoComment } from "./type";
+import { Column, Todo, TodoComment } from "./types";
 
 class DB extends Dexie {
   columns!: Dexie.Table<Column, string>;

@@ -5,7 +5,7 @@ import colors from "../../lib/colors";
 import { State } from "../../lib/reducer";
 import ColumnComponent from "../organisms/Column";
 import { ActionTypes } from "../../lib/actionCreators";
-import { Column } from "../../lib/type";
+import { Column } from "../../lib/types";
 import BoxButton from "../atoms/BoxButton";
 
 const Container = styled.main`

@@ -1,5 +1,5 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers";
-import { Column, Todo, TodoComment } from "./type";
+import { Column, Todo, TodoComment } from "./types";
 import {
   setBoardData,
   setNewColumn,

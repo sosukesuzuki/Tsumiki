@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Todo, TodoComment, UpdateDiffTodo } from "../../lib/type";
+import { Todo, TodoComment, UpdateDiffTodo } from "../../lib/types";
 import colors from "../../lib/colors";
 import { ActionTypes } from "../../lib/actionCreators";
 import { State as RootState } from "../../lib/reducer";

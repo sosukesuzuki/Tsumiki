@@ -1,5 +1,5 @@
 import uuid from "uuid/v1";
-import { Column, Label, TodoComment, Todo } from "./type";
+import { Column, Label, TodoComment, Todo } from "./types";
 
 function getDate(): string {
   return Date.now().toString();

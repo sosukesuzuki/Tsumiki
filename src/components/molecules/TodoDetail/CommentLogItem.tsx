@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { TodoComment, UpdateDiffComment } from "../../../lib/type";
+import { TodoComment, UpdateDiffComment } from "../../../lib/types";
 import colors from "../../../lib/colors";
 import { ActionTypes } from "../../../lib/actionCreators";
 import IconButton from "../../atoms/IconButton";
